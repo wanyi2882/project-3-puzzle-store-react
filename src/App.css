@@ -1,0 +1,21 @@
+#expand-nav {
+  display: none;
+}
+
+.offcanvas{
+  transform: none !important;
+  visibility: visible !important;
+}
+
+@media screen and (min-width: 576px){
+
+  #collapsed-navbar{
+      display: none;
+  }
+
+  #expand-nav{
+      background-color: white;
+      width: 100vw;
+      display: block;
+  }
+}
