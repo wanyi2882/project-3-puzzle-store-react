@@ -1,11 +1,4 @@
-import ProductContext from "./ProductContext.js"
-import ProductListing from "./ProductListing"
-
-import React from 'react'
-import axios from 'axios'
-
-import "bootstrap/dist/css/bootstrap.min.css"
-import "./App.css"
+import React, { useState } from 'react'
 
 import {
   BrowserRouter as Router,
@@ -14,123 +7,107 @@ import {
   Switch
 } from 'react-router-dom'
 
-import Landing from './pages/Landing'
+import ProductListing from "./ProductListing"
+import Register from "./pages/Register"
+import Landing from "./pages/Landing"
+import Login from "./pages/Login"
 
-class App extends React.Component {
+import ProductProvider from "./ProductProvider";
+import UserProvider from './UserProvider'
 
-  // Testing URL
-  url = 'https://3000-rose-ferret-ivegk1sh.ws-prod-ws-us19.gitpod.io/api'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "./App.css"
 
-  state = {
-    'products': [
 
-    ],
-    'navDropdown': false
-  }
+function App() {
 
-  fetchData = async () => {
-    let response = await axios.get(this.url + "/listings")
-
-    let array = response.data
-
-    console.log(array)
-
-    this.setState({
-      'products': array,
-      'isLoaded': true
-    })
-  }
-
-  componentDidMount() {
-    this.fetchData()
-  }
+  // Set state for navDropdown
+  const [navDropdown, setNavDropdown] = useState(false)
 
   // Toggle Collapsed Nav Hamburger
-  toggleNav = () => {
-    if (this.state.navDropdown == false) {
-      this.setState({
-        navDropdown: true
-      })
+  let toggleNav = () => {
+    if (navDropdown == false) {
+      setNavDropdown(true)
     } else {
-      this.setState({
-        navDropdown: false
-      })
+      setNavDropdown(false)
     }
   }
 
-  render() {
-    const context = {
-      // make sure the products function is an array
-      // the purpose of the function is to retrieve
-      products: () => {
-        return this.state.products;
-      }
-    }
+  return <React.Fragment>
+    <Router>
 
-    return <ProductContext.Provider value={context}>
-      <React.Fragment>
-        <Router>
-          {/* Nav Bar when screen size more than 576px */}
-          <nav id="expand-nav" className="container-fluid">
-            <ul className="nav nav-tabs">
-              <li className="nav-item">
-                <Link to="/">
-                  <button className="nav-link">Home</button>
-                </Link>
-              </li>
+      {/* Nav Bar when screen size more than 576px */}
+      <nav id="expand-nav" className="container-fluid">
+        <ul className="nav nav-tabs">
+          <li className="nav-item">
+            <Link to="/" className="link-style" >
+              <button className="nav-link">Home</button>
+            </Link>
+          </li>
 
-              <li className="nav-item">
-                <Link to="/listings">
-                  <button className="nav-link">Listings</button>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <button className="nav-link">Login</button>
-              </li>
-            </ul>
-          </nav>
+          <li className="nav-item">
+            <Link to="/listings" className="link-style" >
+              <button className="nav-link">Listings</button>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/register" className="link-style" >
+              <button className="nav-link">Register</button>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/login" className="link-style" >
+              <button className="nav-link">Login</button>
+            </Link>
+          </li>
+        </ul>
+      </nav>
 
-          {/* Nav Bar when screen size less than 576px */}
-          <nav id="collapsed-navbar" className="navbar navbar-light">
-            <div className="container-fluid">
-              <div className="navbar-brand"
-                role="button">Logo</div>
-              <button className="navbar-toggler"
-                type="button"
-                onClick={() => { this.toggleNav() }}>
-                <span className="navbar-toggler-icon"></span>
-              </button>
+      {/* Nav Bar when screen size less than 576px */}
+      <nav id="collapsed-navbar" className="navbar navbar-light">
+        <div className="container-fluid">
+          <div className="navbar-brand"
+            role="button">Logo</div>
+          <button className="navbar-toggler"
+            type="button"
+            onClick={() => toggleNav()}>
+            <span className="navbar-toggler-icon"></span>
+          </button>
 
-              {this.state.navDropdown ?
-                <div className="offcanvas offcanvas-end"
-                  tabindex="-1">
+          {navDropdown ?
+            <div className="offcanvas offcanvas-end"
+              tabindex="-1">
 
-                  <div className="offcanvas-header">
-                    <h5 className="offcanvas-title" id="offcanvasNavbarLabel"></h5>
-                    <button type="button"
-                      className="btn-close text-reset"
-                      onClick={() => { this.toggleNav() }}></button>
-                  </div>
+              <div className="offcanvas-header">
+                <h5 className="offcanvas-title" id="offcanvasNavbarLabel"></h5>
+                <button type="button"
+                  className="btn-close text-reset"
+                  onClick={() => toggleNav()}></button>
+              </div>
 
-                  <div className="offcanvas-body">
-                    <ul className="navbar-nav justify-content-end flex-grow-1">
-                      <li className="nav-item">
-                        <Link to='/' className="nav-link" onClick={() => { this.toggleNav() }}>Home</Link>
-                      </li>
-                      <li className="nav-item">
-                        <Link to='/listings' className="nav-link" onClick={() => { this.toggleNav() }}>Listings</Link>
-                      </li>
-                      <li className="nav-item">
-                        <div className="nav-link">Florists Login</div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                : null
-              }
+              <div className="offcanvas-body">
+                <ul className="navbar-nav justify-content-end flex-grow-1">
+                  <li className="nav-item">
+                    <Link to='/' className="nav-link" onClick={() => toggleNav()}>Home</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to='/listings' className="nav-link" onClick={() => toggleNav()}>Listings</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to='/register' className="nav-link" onClick={() => toggleNav()}>Register</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to='/login' className="nav-link" onClick={() => toggleNav()}>Login</Link>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </nav>
-
+            : null
+          }
+        </div>
+      </nav>
+      <UserProvider>
+        <ProductProvider>
           <Switch>
             <Route exact path="/">
               <Landing />
@@ -138,14 +115,17 @@ class App extends React.Component {
             <Route exact path="/listings">
               <ProductListing />
             </Route>
-            <Route exact path="/product/:productId">
-              <Landing />
+            <Route exact path="/register">
+              <Register />
+            </Route>
+            <Route exact path="/login">
+              <Login />
             </Route>
           </Switch>
-        </Router>
-      </React.Fragment>
-    </ProductContext.Provider>
-  }
+        </ProductProvider>
+      </UserProvider>
+    </Router>
+  </React.Fragment>
 }
 
 export default App;
