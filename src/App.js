@@ -1,25 +1,54 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 import {
   BrowserRouter as Router,
   Route,
   Link,
   Switch
-} from 'react-router-dom'
+} from 'react-router-dom';
 
-import ProductListing from "./ProductListing"
-import Register from "./pages/Register"
-import Landing from "./pages/Landing"
-import Login from "./pages/Login"
+import ProductListing from "./ProductListing";
+import Register from "./pages/Register";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 
 import ProductProvider from "./ProductProvider";
-import UserProvider from './UserProvider'
+import UserProvider from "./services/user.service";
+import AuthService from "./services/auth.service";
 
-import "bootstrap/dist/css/bootstrap.min.css"
-import "./App.css"
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 function App() {
+
+  const [currentUser, setCurrentUser] = useState(false);
+
+  // Login
+  const login = (email, password) => {
+    AuthService.login(email, password).then(
+      action1, action2
+    )
+  }
+
+  const action1 = () => {
+    setCurrentUser(true)
+    alert("Login Success")
+    return <Link to="/profile" />
+  }
+
+  const action2 = () => {
+    alert("Please check login email/username.")
+  }
+
+  // Logout
+  const logOut = () => {
+    AuthService.logout();
+
+    setCurrentUser(undefined);
+
+    alert("you have successfully logout!")
+  };
 
   // Set state for navDropdown
   const [navDropdown, setNavDropdown] = useState(false)
@@ -57,7 +86,9 @@ function App() {
           </li>
           <li className="nav-item">
             <Link to="/login" className="link-style" >
-              <button className="nav-link">Login</button>
+              {currentUser
+                ? <button className="nav-link" onClick={() => logOut()}>Logout</button>
+                : <button className="nav-link">Login</button>}
             </Link>
           </li>
         </ul>
@@ -97,7 +128,9 @@ function App() {
                     <Link to='/register' className="nav-link" onClick={() => toggleNav()}>Register</Link>
                   </li>
                   <li className="nav-item">
-                    <Link to='/login' className="nav-link" onClick={() => toggleNav()}>Login</Link>
+                    {currentUser
+                      ? <Link to='/login' className="nav-link" onClick={() => logOut()}>Logout</Link>
+                      : <Link to='/login' className="nav-link" onClick={() => toggleNav()}>Login</Link>}
                   </li>
                 </ul>
               </div>
@@ -119,7 +152,10 @@ function App() {
               <Register />
             </Route>
             <Route exact path="/login">
-              <Login />
+              <Login login={login} />
+            </Route>
+            <Route exact path="/profile">
+              <Profile />
             </Route>
           </Switch>
         </ProductProvider>

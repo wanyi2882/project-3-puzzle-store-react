@@ -6,10 +6,9 @@ require('dotenv').config()
 
 export default function ProductProvider(props) {
 
-    const [products, setProducts] = useState('');
+    const [products, setProducts] = useState([]);
 
-
-    useEffect( () => {
+    useEffect(() => {
 
         const listings = async () => {
             const response = await axios.get(process.env.REACT_APP_URL + "/api/listings")
