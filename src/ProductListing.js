@@ -1,21 +1,35 @@
-import React, { useContext } from 'react'
-import axios from 'axios'
+import React, { useContext, useState, useEffect } from 'react';
+import axios from 'axios';
+import authorizationHeader from "./services/authorization-header";
 
-import ProductContext from './ProductContext'
+import ProductContext from './ProductContext';
+import UserContext from './UserContext';
 
 export default function ProductListing() {
 
+    const [user, setUser] = useState([]);
+
     let context = useContext(ProductContext);
-    
+    let userContext = useContext(UserContext);
+
+    // Mount User Data
+    useEffect(() => {
+        const userData = userContext.getUser()
+        setUser(userData)
+    })
+
+    // Add to Cart (Get Route)
     let addToCart = async (puzzleId) => {
 
-
-        await axios.get(process.env.REACT_APP_URL + "/api/cart/add/"
-        + "?user_id=" + 2
-        + "&"
-        + "puzzle_id=" + puzzleId
-        )
-    }
+        if (user.id) {
+            await axios.get(process.env.REACT_APP_URL + "/api/cart/add/"
+                + "?puzzle_id=" + puzzleId,
+                { headers: authorizationHeader() }
+            )
+        } else {
+            alert("Please login to add to cart")
+        }
+    };
 
     return <React.Fragment>
         <div className="container">
@@ -29,9 +43,9 @@ export default function ProductListing() {
                                 src={listings.image} />
                             <div className="card-body">
                                 <h6 className="card-title">{listings.title}</h6>
-                                <span>${listings.cost / 100}</span>
+                                <span>${(listings.cost / 100).toFixed(2)}</span>
                             </div>
-                            <button className="btn btn-danger" onClick={()=>addToCart(listings.id)}>Quick Add to Cart</button>
+                            <button className="btn btn-danger" onClick={() => addToCart(listings.id)}>Quick Add to Cart</button>
                         </div>
                     </div>
                 )}
