@@ -8,7 +8,7 @@ const login = async (email, password) => {
     })
     .then((response) => {
       if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+        sessionStorage.setItem("user", JSON.stringify(response.data));
       }
       return response.data;
     });
@@ -16,12 +16,12 @@ const login = async (email, password) => {
 
 // Logout (Remove user details from local Storage)
 const logout = () => {
-  localStorage.removeItem("user");
+  sessionStorage.removeItem("user");
 };
 
 // Retrieve existing user details
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  return JSON.parse(sessionStorage.getItem("user"));
 };
 
 const AuthService = {
