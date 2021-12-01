@@ -1,14 +1,16 @@
-import React, { useState, useContext } from "react";
-import AuthService from "../services/auth.service";
-import UserContext from "../UserContext"; 
+import React, { useState, useEffect, useContext } from "react";
+import UserContext from "../UserContext";
 
 export default function Profile() {
-  const currentLoginUser = AuthService.getCurrentUser();
 
   let context = useContext(UserContext);
 
-  let user = context.getUser()
+  const [user, setUser] = useState([]);
 
+  useEffect(() => {
+    const userData = context.getUser()
+    setUser(userData)
+  })
 
   return <React.Fragment>
     <div className="container">

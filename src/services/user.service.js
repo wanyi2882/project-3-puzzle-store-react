@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import authorizationHeader from "./authorization-header";
-import UserContext from "../UserContext"
+import axios from "axios"
+import UserContext from "../UserContext";
+import authorizationHeader from "../services/authorization-header";
 
 require('dotenv').config()
 
-export default function UserService(props) {
+export default function UserProvider(props) {
 
   const [user, setUser] = useState([]);
 
@@ -29,9 +29,4 @@ export default function UserService(props) {
   return <UserContext.Provider value={context}>
     {props.children}
   </UserContext.Provider>
-
-
-
-
-
-};
+}

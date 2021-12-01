@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   BrowserRouter as Router,
   Route,
   Link,
-  Switch
+  Switch,
+  Redirect
 } from 'react-router-dom';
 
 import ProductListing from "./ProductListing";
@@ -12,10 +13,12 @@ import Register from "./pages/Register";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import Restricted from "./pages/Restricted"
+import Cart from "./pages/Cart"
 
 import ProductProvider from "./ProductProvider";
-import UserProvider from "./services/user.service";
 import AuthService from "./services/auth.service";
+import UserProvider from './services/user.service';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -34,7 +37,6 @@ function App() {
   const action1 = () => {
     setCurrentUser(true)
     alert("Login Success")
-    return <Link to="/profile" />
   }
 
   const action2 = () => {
@@ -45,7 +47,7 @@ function App() {
   const logOut = () => {
     AuthService.logout();
 
-    setCurrentUser(undefined);
+    setCurrentUser(false);
 
     alert("you have successfully logout!")
   };
@@ -79,11 +81,27 @@ function App() {
               <button className="nav-link">Listings</button>
             </Link>
           </li>
-          <li className="nav-item">
-            <Link to="/register" className="link-style" >
-              <button className="nav-link">Register</button>
-            </Link>
-          </li>
+          {!currentUser
+            ? <li className="nav-item">
+              <Link to="/register" className="link-style" >
+                <button className="nav-link">Register</button>
+              </Link>
+            </li>
+            : null}
+          {currentUser
+            ? <li className="nav-item">
+              <Link to="/cart" className="link-style" >
+                <button className="nav-link">Cart</button>
+              </Link>
+            </li>
+            : null}
+          {currentUser
+            ? <li className="nav-item">
+              <Link to="/profile" className="link-style" >
+                <button className="nav-link">Profile</button>
+              </Link>
+            </li>
+            : null}
           <li className="nav-item">
             <Link to="/login" className="link-style" >
               {currentUser
@@ -124,9 +142,24 @@ function App() {
                   <li className="nav-item">
                     <Link to='/listings' className="nav-link" onClick={() => toggleNav()}>Listings</Link>
                   </li>
-                  <li className="nav-item">
-                    <Link to='/register' className="nav-link" onClick={() => toggleNav()}>Register</Link>
-                  </li>
+                  {!currentUser
+                    ? <li className="nav-item">
+                      <Link to='/register' className="nav-link" onClick={() => toggleNav()}>Register</Link>
+                    </li>
+                    :
+                    null}
+                  {currentUser
+                    ? <li className="nav-item">
+                      <Link to='/cart' className="nav-link" onClick={() => toggleNav()}>Cart</Link>
+                    </li>
+                    :
+                    null}
+                  {currentUser
+                    ? <li className="nav-item">
+                      <Link to='/profile' className="nav-link" onClick={() => toggleNav()}>Profile</Link>
+                    </li>
+                    :
+                    null}
                   <li className="nav-item">
                     {currentUser
                       ? <Link to='/login' className="nav-link" onClick={() => logOut()}>Logout</Link>
@@ -151,11 +184,17 @@ function App() {
             <Route exact path="/register">
               <Register />
             </Route>
+            <Route exact path="/restricted">
+              <Restricted />
+            </Route>
             <Route exact path="/login">
-              <Login login={login} />
+              {currentUser ? <Redirect to="/profile" /> : <Login login={login} />}
             </Route>
             <Route exact path="/profile">
-              <Profile />
+              {currentUser ? <Profile /> : <Redirect to="/restricted" />}
+            </Route>
+            <Route exact path="/cart">
+              {currentUser ? <Cart /> : <Redirect to="/restricted" />}
             </Route>
           </Switch>
         </ProductProvider>
