@@ -1,14 +1,21 @@
-import React, { useState, useContext } from "react";
-import AuthService from "../services/auth.service";
-import UserContext from "../UserContext"; 
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import authorizationHeader from "../services/authorization-header";
 
 export default function Profile() {
-  const currentLoginUser = AuthService.getCurrentUser();
 
-  let context = useContext(UserContext);
+  const [user, setUser] = useState([]);
 
-  let user = context.getUser()
-
+  useEffect(() => {
+    // Retrieving profile of user 
+    // If Authorization Request Header retrieve from local store through auth-header
+    const getProfile = async () => {
+      const response = await axios.get(process.env.REACT_APP_URL + "/api/users/profile", { headers: authorizationHeader() })
+      const userData = response.data
+      setUser(userData)
+    };
+    getProfile()
+  }, [])
 
   return <React.Fragment>
     <div className="container">
