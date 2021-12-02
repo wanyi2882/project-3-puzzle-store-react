@@ -12,7 +12,7 @@ export default function ProductListing() {
     let addToCart = async (puzzleId) => {
 
         try {
-            await axios.get(process.env.REACT_APP_URL + "/api/cart/"
+            await axios.get(process.env.REACT_APP_URL + "/api/cart/add"
                 + "?puzzle_id=" + puzzleId,
                 { headers: authorizationHeader() }
             ).then(() => alert("Item Added to cart"))
