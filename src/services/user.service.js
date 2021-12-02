@@ -9,9 +9,12 @@ export default function UserProvider(props) {
 
   const [user, setUser] = useState([]);
 
+
+
   useEffect(() => {
     // Retrieving profile of user 
     // If Authorization Request Header retrieve from local store through auth-header
+    
     const getProfile = async () => {
       const response = await axios.get(process.env.REACT_APP_URL + "/api/users/profile", { headers: authorizationHeader() })
       const userData = response.data

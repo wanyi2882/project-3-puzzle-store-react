@@ -3,30 +3,20 @@ import axios from 'axios';
 import authorizationHeader from "./services/authorization-header";
 
 import ProductContext from './ProductContext';
-import UserContext from './UserContext';
 
 export default function ProductListing() {
 
-    const [user, setUser] = useState([]);
-
     let context = useContext(ProductContext);
-    let userContext = useContext(UserContext);
-
-    // Mount User Data
-    useEffect(() => {
-        const userData = userContext.getUser()
-        setUser(userData)
-    })
 
     // Add to Cart (Get Route)
     let addToCart = async (puzzleId) => {
 
-        if (user.id) {
-            await axios.get(process.env.REACT_APP_URL + "/api/cart/add/"
+        try {
+            await axios.get(process.env.REACT_APP_URL + "/api/cart/"
                 + "?puzzle_id=" + puzzleId,
                 { headers: authorizationHeader() }
-            )
-        } else {
+            ).then(() => alert("Item Added to cart"))
+        } catch {
             alert("Please login to add to cart")
         }
     };
