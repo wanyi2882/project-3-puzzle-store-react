@@ -17,11 +17,20 @@ export default function Cart() {
         getCart()
     }, [])
 
-    const updateCartAdd = (index) => {
+    const updateCartAdd = async (index, puzzle_id) => {
 
         cart[index].quantity += 1;
         const updateCart = [...cart];
         setCart(updateCart);
+
+        const quantity = cart[index].quantity
+
+        await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
+        {
+            "puzzle_id": puzzle_id,
+            "newQuantity": quantity
+        }
+        , { headers: authorizationHeader() })
 
     }
 
@@ -59,7 +68,7 @@ export default function Cart() {
                                 <div>Quantity:
                                 <button className="btn btn-primary btn-sm mx-1" 
                                     onClick={() => updateCartMinus(cart.indexOf(content), content.puzzle.id)}>-</button>
-                                    <input type="number" value={content.quantity} style={{width: "50px"}}
+                                    <input type="text" value={content.quantity} style={{width: "50px"}}
                                     />
                                     <button className="btn btn-primary btn-sm mx-1" 
                                     onClick={() => updateCartAdd(cart.indexOf(content), content.puzzle.id)}>+</button>
