@@ -7,16 +7,18 @@ export default function Cart() {
     const [cart, setCart] = useState([]);
 
     useEffect(() => {
-        // Retrieving profile of user 
-        // If Authorization Request Header retrieve from local store through auth-header
-        const getCart = async () => {
-            const response = await axios.get(process.env.REACT_APP_URL + "/api/cart", { headers: authorizationHeader() })
-            const cartData = response.data
-            setCart(cartData)
-        };
         getCart()
     }, [])
 
+    // Retrieving profile of user 
+    // If Authorization Request Header retrieve from local store through auth-header
+    const getCart = async () => {
+        const response = await axios.get(process.env.REACT_APP_URL + "/api/cart", { headers: authorizationHeader() })
+        const cartData = response.data
+        setCart(cartData)
+    };
+
+    // Add one quantity to item
     const updateCartAdd = async (index, puzzle_id) => {
 
         cart[index].quantity += 1;
@@ -26,14 +28,15 @@ export default function Cart() {
         const quantity = cart[index].quantity
 
         await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
-        {
-            "puzzle_id": puzzle_id,
-            "newQuantity": quantity
-        }
-        , { headers: authorizationHeader() })
+            {
+                "puzzle_id": puzzle_id,
+                "newQuantity": quantity
+            }
+            , { headers: authorizationHeader() })
 
     }
 
+    // Minus one quantity from item
     const updateCartMinus = async (index, puzzle_id) => {
 
         cart[index].quantity -= 1;
@@ -43,16 +46,25 @@ export default function Cart() {
         const quantity = cart[index].quantity
 
         await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
-        {
-            "puzzle_id": puzzle_id,
-            "newQuantity": quantity
-        }
-        , { headers: authorizationHeader() })
+            {
+                "puzzle_id": puzzle_id,
+                "newQuantity": quantity
+            }
+            , { headers: authorizationHeader() })
 
     }
 
+    // Remove item from cart
+    const removeFromCart = async (puzzle_id) => {
 
-    // console.log(cart)
+        await axios.post(process.env.REACT_APP_URL + "/api/cart/remove",
+            {
+                "puzzle_id": puzzle_id
+            }
+            , { headers: authorizationHeader() })
+            .then(() => getCart())
+
+    }
 
     return <React.Fragment>
         <div className="container">
@@ -66,12 +78,14 @@ export default function Cart() {
                                 <h6 className="card-title">{content.puzzle.title}</h6>
                                 <span>${(content.puzzle.cost / 100).toFixed(2)}</span>
                                 <div>Quantity:
-                                <button className="btn btn-primary btn-sm mx-1" 
-                                    onClick={() => updateCartMinus(cart.indexOf(content), content.puzzle.id)}>-</button>
-                                    <input type="text" value={content.quantity} style={{width: "50px"}}
+                                    <button className="btn btn-primary btn-sm mx-1"
+                                        onClick={() => updateCartMinus(cart.indexOf(content), content.puzzle.id)}>-</button>
+                                    <input type="text" value={content.quantity} style={{ width: "50px" }}
                                     />
-                                    <button className="btn btn-primary btn-sm mx-1" 
-                                    onClick={() => updateCartAdd(cart.indexOf(content), content.puzzle.id)}>+</button>
+                                    <button className="btn btn-primary btn-sm mx-1"
+                                        onClick={() => updateCartAdd(cart.indexOf(content), content.puzzle.id)}>+</button>
+                                    <button className="btn btn-danger btn-sm mx-1"
+                                        onClick={() => removeFromCart(content.puzzle.id)}>Remove</button>
                                 </div>
 
                             </div>
