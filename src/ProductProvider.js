@@ -7,22 +7,25 @@ require('dotenv').config()
 export default function ProductProvider(props) {
 
     const [products, setProducts] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState("")
 
     useEffect(() => {
-
         const listings = async () => {
-            const response = await axios.get(process.env.REACT_APP_URL + "/api/listings")
+            const response = await axios.get(process.env.REACT_APP_URL + "/api/listings"
+            + "?title=" + searchKeyword)
+
             const data = response.data
             setProducts(data)
         }
-
         listings()
-    }, [])
-
+    }, [searchKeyword])
 
     const context = {
         getProducts: () => {
             return products
+        },
+        getSearchKeyword: (searchKeywordProp) => {
+            setSearchKeyword(searchKeywordProp)
         }
     }
 

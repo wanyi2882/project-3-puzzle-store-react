@@ -4,7 +4,9 @@ import authorizationHeader from "./services/authorization-header";
 
 import ProductContext from './ProductContext';
 
-export default function ProductListing() {
+export default function ProductListing(props) {
+
+    const [searchKeyword, setSearchKeyword] = useState(props.searchKeywordProp)
 
     let context = useContext(ProductContext);
 
@@ -21,7 +23,25 @@ export default function ProductListing() {
         }
     };
 
+    let searchProducts = (searchKeyword) => {
+        context.getSearchKeyword(searchKeyword)
+    }
+
     return <React.Fragment>
+
+        <div id="searchbox" className="container">
+            {/* Keyword Search */}
+            <div className="search-div">
+                <label className="form-label search-label">Keyword Search</label>
+                <input type="text"
+                    className="form-control"
+                    name="searchKeyword"
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)} />
+            </div>
+            <button className="btn btn-danger btn-sm" onClick={() => searchProducts(searchKeyword)}>Search</button>
+        </div>
+
         <div className="container">
             <div className="row">
                 {context.getProducts().map(listings =>
