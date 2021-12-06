@@ -24,9 +24,10 @@ export default function Register() {
     const sendData = async () => {
         await axios.post(process.env.REACT_APP_URL + "/api/users/register",
             {
-                "username": this.state.userName,
-                "email": this.state.email,
-                "password": getHashedPassword(this.state.password)
+                "username": username,
+                "email": email,
+                "password": getHashedPassword(password),
+                "role_type": "user"
             })
     }
 
