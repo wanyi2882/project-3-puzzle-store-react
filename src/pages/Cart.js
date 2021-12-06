@@ -87,19 +87,19 @@ export default function Cart() {
                     {cart.map(content =>
                         <div className="mt-2 mb-2" key={content.id}>
                             <div className="card card-listing" role="button" >
-                                <img src={content.puzzle.image} alt={content.puzzle.title} width="200" />
+                                <img src={content.Puzzle.image} alt={content.Puzzle.title} width="200" />
                                 <div className="card-body">
-                                    <h6 className="card-title">{content.puzzle.title}</h6>
-                                    <span>${(content.puzzle.cost / 100).toFixed(2)}</span>
+                                    <h6 className="card-title">{content.Puzzle.title}</h6>
+                                    <span>${(content.Puzzle.cost / 100).toFixed(2)}</span>
                                     <div>Quantity:
                                         <button className="btn btn-primary btn-sm mx-1"
-                                            onClick={() => updateCartMinus(cart.indexOf(content), content.puzzle.id)}>-</button>
+                                            onClick={() => updateCartMinus(cart.indexOf(content), content.Puzzle.id)}>-</button>
                                         <input type="text" value={content.quantity} style={{ width: "50px" }}
                                         />
                                         <button className="btn btn-primary btn-sm mx-1"
-                                            onClick={() => updateCartAdd(cart.indexOf(content), content.puzzle.id)}>+</button>
+                                            onClick={() => updateCartAdd(cart.indexOf(content), content.Puzzle.id)}>+</button>
                                         <button className="btn btn-danger btn-sm mx-1"
-                                            onClick={() => removeFromCart(content.puzzle.id)}>Remove</button>
+                                            onClick={() => removeFromCart(content.Puzzle.id)}>Remove</button>
                                     </div>
 
                                 </div>
