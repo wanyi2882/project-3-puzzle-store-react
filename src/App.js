@@ -27,6 +27,12 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState(false);
 
+  useEffect(() => {
+    if (localStorage.getItem("user")){
+      setCurrentUser(true)
+    }
+  })
+
   // Login
   const login = (email, password) => {
     AuthService.login(email, password).then(
@@ -191,10 +197,10 @@ function App() {
               {currentUser ? <Redirect to="/profile" /> : <Login login={login} />}
             </Route>
             <Route exact path="/profile">
-              {currentUser ? <Profile /> : <Redirect to="/restricted" />}
+              {currentUser ? <Profile /> : <Restricted />}
             </Route>
             <Route exact path="/cart">
-              {currentUser ? <Cart /> : <Redirect to="/restricted" />}
+              {currentUser ? <Cart /> : <Restricted />}
             </Route>
           </Switch>
         </ProductProvider>
