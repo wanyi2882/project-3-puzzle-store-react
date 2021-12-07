@@ -15,7 +15,7 @@ export default function ProductProvider(props) {
     useEffect(() => {
         const listings = async () => {
             const response = await axios.get(process.env.REACT_APP_URL + "/api/listings"
-            + "?title=" + searchKeyword
+            + "?keyword=" + searchKeyword
             + "&"
             + "difficulty_level=" + searchDifficultyLevel
             + "&"

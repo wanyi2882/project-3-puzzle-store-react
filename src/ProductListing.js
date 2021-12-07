@@ -84,7 +84,7 @@ export default function ProductListing() {
         }
     }
     return <React.Fragment>
-
+        {/* Search Box */}
         <div id="searchbox" className="container">
             {/* Keyword Search */}
             <div className="search-div">
@@ -181,7 +181,7 @@ export default function ProductListing() {
                 </div>
             </div>
 
-
+            {/* Search Button */}
             <button className="btn btn-danger btn-sm" onClick={() => searchProducts()}>Search</button>
         </div>
 
