@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 
-require('dotenv').config()
+// Create Hash Password
+const createHash = require('create-hash')
+
+const getHashedPassword = (password) => {
+    const sha256 = createHash('sha256')
+    const hash = sha256.update(password).digest('base64');
+    return hash;
+}
 
 export default function Login({login}) {
-
-    const history = useHistory()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     // Login
     const onsubmit = () => {
-        login(email, password)
+        login(email, getHashedPassword(password))
     }
 
     return <React.Fragment>
