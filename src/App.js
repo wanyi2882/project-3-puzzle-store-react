@@ -41,8 +41,8 @@ function App() {
   }
 
   const action1 = () => {
-    setCurrentUser(true)
     alert("Login Success")
+    setCurrentUser(true)
   }
 
   const action2 = () => {
@@ -51,7 +51,9 @@ function App() {
 
   // Logout
   const logOut = () => {
-    AuthService.logout();
+    let user = JSON.parse(localStorage.getItem("user"))
+    let refreshToken = user.refreshToken
+    AuthService.logout(refreshToken);
 
     setCurrentUser(false);
 

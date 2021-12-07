@@ -10,13 +10,16 @@ const login = async (email, password) => {
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
-      return response.data;
+      return response.status;
     });
 };
 
 // Logout (Remove user details from local Storage)
-const logout = () => {
-  localStorage.removeItem("user");
+const logout = async (refreshToken) => {
+  
+  return axios.post(process.env.REACT_APP_URL + "/api/users/logout", {
+    refreshToken: refreshToken
+  }).then(localStorage.removeItem("user"))
 };
 
 // Retrieve existing user details
