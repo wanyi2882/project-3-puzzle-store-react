@@ -1,19 +1,75 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import authorizationHeader from "./services/authorization-header";
+import "./css/ProductListing.css"
 
 import ProductContext from './ProductContext';
 
 export default function ProductListing() {
 
+    const [searchDropdown, setSearchDropDown] = useState(false)
     const [searchKeyword, setSearchKeyword] = useState("")
     const [searchDifficultyLevel, setSearchDifficultyLevel] = useState([])
     const [searchSize, setSearchSize] = useState([])
     const [searchTag, setSearchTag] = useState([])
+    const [searchMinPrice, setSearchMinPrice] = useState("")
+    const [searchMaxPrice, setSearchMaxPrice] = useState("")
+    const [searchTheme, setSearchTheme] = useState("")
+    const [themes, setThemes] = useState([])
+    const [difficultyLevels, setDifficultyLevels] = useState([])
+    const [sizes, setSizes] = useState([])
+    const [tags, setTags] = useState([])
+    const [ageGroups, setAgeGroups] = useState([])
+    const [searchAgeGroup, setSearchAgeGroup] = useState([])
 
+    // Get Themes Table
+    const getThemes = async () => {
+        let theme = await axios.get(process.env.REACT_APP_URL + "/api/listings/get_themes")
+        setThemes(theme.data)
+    }
+
+    // Get Themes Table
+    const getLevels = async () => {
+        let level = await axios.get(process.env.REACT_APP_URL + "/api/listings/get_difficulty_levels")
+        setDifficultyLevels(level.data)
+    }
+
+    // Get Size Table
+    const getSizes = async () => {
+        let size = await axios.get(process.env.REACT_APP_URL + "/api/listings/get_sizes")
+        setSizes(size.data)
+    }
+
+    // Get Tags Table
+    const getTags = async () => {
+        let tags = await axios.get(process.env.REACT_APP_URL + "/api/listings/get_tags")
+        setTags(tags.data)
+    }
+
+    // Get Age Group Table
+    const getAges = async () => {
+        let ageGroup = await axios.get(process.env.REACT_APP_URL + "/api/listings/get_age_groups")
+        setAgeGroups(ageGroup.data)
+    }
+
+    // Use Effect (Component Did Mount)
+    useEffect(() => {
+        getThemes()
+        getLevels()
+        getSizes()
+        getTags()
+        getAges()
+    }, [])
+
+    // Use Product Context
     let context = useContext(ProductContext);
 
-    // Add to Cart (Get Route)
+    // Set props to Product Provider 
+    let searchProducts = () => {
+        context.getSearch(searchKeyword, searchDifficultyLevel, searchSize, searchTag, searchMinPrice, searchMaxPrice, searchTheme, searchAgeGroup)
+    }
+
+    // Quick Add to Cart (Get Route)
     let addToCart = async (puzzleId) => {
 
         try {
@@ -26,16 +82,12 @@ export default function ProductListing() {
         }
     };
 
-    let searchProducts = () => {
-        context.getSearch(searchKeyword, searchDifficultyLevel, searchSize, searchTag)
-    }
-
     // Update form fields for checkboxes 2 way binding (Difficulty Level)
     let updateDifficultyCheckboxes = (event) => {
         let arrayToModify = searchDifficultyLevel;
 
-        if (arrayToModify.includes(event.target.value)) {
-            let indexToRemove = arrayToModify.indexOf(event.target.value);
+        if (arrayToModify.includes(parseInt(event.target.value))) {
+            let indexToRemove = arrayToModify.indexOf(parseInt(event.target.value));
             let cloned = [...arrayToModify.slice(0, indexToRemove),
             ...arrayToModify.slice(indexToRemove + 1)];
 
@@ -43,7 +95,7 @@ export default function ProductListing() {
 
         } else {
             // clone the array
-            let cloned = [...arrayToModify, event.target.value];
+            let cloned = [...arrayToModify, parseInt(event.target.value)];
             setSearchDifficultyLevel(cloned)
         }
     }
@@ -52,8 +104,8 @@ export default function ProductListing() {
     let updateSizeCheckboxes = (event) => {
         let arrayToModify = searchSize;
 
-        if (arrayToModify.includes(event.target.value)) {
-            let indexToRemove = arrayToModify.indexOf(event.target.value);
+        if (arrayToModify.includes(parseInt(event.target.value))) {
+            let indexToRemove = arrayToModify.indexOf(parseInt(event.target.value));
             let cloned = [...arrayToModify.slice(0, indexToRemove),
             ...arrayToModify.slice(indexToRemove + 1)];
 
@@ -61,7 +113,7 @@ export default function ProductListing() {
 
         } else {
             // clone the array
-            let cloned = [...arrayToModify, event.target.value];
+            let cloned = [...arrayToModify, parseInt(event.target.value)];
             setSearchSize(cloned)
         }
     }
@@ -70,8 +122,8 @@ export default function ProductListing() {
     let updateTagCheckboxes = (event) => {
         let arrayToModify = searchTag;
 
-        if (arrayToModify.includes(event.target.value)) {
-            let indexToRemove = arrayToModify.indexOf(event.target.value);
+        if (arrayToModify.includes(parseInt(event.target.value))) {
+            let indexToRemove = arrayToModify.indexOf(parseInt(event.target.value));
             let cloned = [...arrayToModify.slice(0, indexToRemove),
             ...arrayToModify.slice(indexToRemove + 1)];
 
@@ -79,111 +131,155 @@ export default function ProductListing() {
 
         } else {
             // clone the array
-            let cloned = [...arrayToModify, event.target.value];
+            let cloned = [...arrayToModify, parseInt(event.target.value)];
             setSearchTag(cloned)
+        }
+    }
+
+    // Update form fields for checkboxes 2 way binding (Themes)
+    let updateThemeCheckboxes = (event) => {
+        let arrayToModify = searchTheme;
+
+        if (arrayToModify.includes(parseInt(event.target.value))) {
+            let indexToRemove = arrayToModify.indexOf(parseInt(event.target.value));
+            let cloned = [...arrayToModify.slice(0, indexToRemove),
+            ...arrayToModify.slice(indexToRemove + 1)];
+
+            setSearchTheme(cloned)
+
+        } else {
+            // clone the array
+            let cloned = [...arrayToModify, parseInt(event.target.value)];
+            setSearchTheme(cloned)
+        }
+    }
+
+    // Update form fields for checkboxes 2 way binding (Age Group)
+    let updateAgeGroupCheckboxes = (event) => {
+        let arrayToModify = searchAgeGroup;
+
+        if (arrayToModify.includes(parseInt(event.target.value))) {
+            let indexToRemove = arrayToModify.indexOf(parseInt(event.target.value));
+            let cloned = [...arrayToModify.slice(0, indexToRemove),
+            ...arrayToModify.slice(indexToRemove + 1)];
+
+            setSearchAgeGroup(cloned)
+
+        } else {
+            // clone the array
+            let cloned = [...arrayToModify, parseInt(event.target.value)];
+            setSearchAgeGroup(cloned)
+        }
+    }
+
+    // Toggle Search Accordion
+    const toggleAccordion = () => {
+        if (searchDropdown == false) {
+            setSearchDropDown(true)
+        } else {
+            setSearchDropDown(false)
         }
     }
     return <React.Fragment>
         {/* Search Box */}
         <div id="searchbox" className="container">
-            {/* Keyword Search */}
-            <div className="search-div">
-                <label className="form-label search-label">Keyword Search</label>
-                <input type="text" className="form-control" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
-            </div>
+            <div role="button" onClick={() => toggleAccordion()}><h3>Search and Filter</h3></div>
 
-            {/* Search by Difficulty Level (Checkboxes) */}
-            <div className="search-div">
-                <div><label className="form-label search-label">Difficulty Level</label></div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="1" checked={searchDifficultyLevel.includes('1')}
-                        onChange={updateDifficultyCheckboxes} />
-                    <label className="form-check-label"> Beginner </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="2" checked={searchDifficultyLevel.includes('2')}
-                        onChange={updateDifficultyCheckboxes} />
-                    <label className="form-check-label" > Intermediate </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="3" checked={searchDifficultyLevel.includes('3')}
-                        onChange={updateDifficultyCheckboxes} />
-                    <label className="form-check-label" > Advance </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="4" checked={searchDifficultyLevel.includes('4')}
-                        onChange={updateDifficultyCheckboxes} />
-                    <label className="form-check-label" > Expert </label>
-                </div>
-            </div>
+            {/* Search Dropdown when toggled to true */}
+            {searchDropdown ?
+                <div>
+                    {/* Keyword Search */}
+                    <div className="search-div">
+                        <label className="form-label search-label">Keyword Search</label>
+                        <input type="text" className="form-control" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
+                    </div>
 
-            {/* Search by Size - Pieces (Checkboxes) */}
-            <div className="search-div">
-                <div><label className="form-label search-label">Size</label></div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="1" checked={searchSize.includes('1')}
-                        onChange={updateSizeCheckboxes} />
-                    <label className="form-check-label"> 100 Pieces </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="3" checked={searchSize.includes('3')}
-                        onChange={updateSizeCheckboxes} />
-                    <label className="form-check-label" > 200 Pieces </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="4" checked={searchSize.includes('4')}
-                        onChange={updateSizeCheckboxes} />
-                    <label className="form-check-label" > 300 Pieces  </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="5" checked={searchSize.includes('5')}
-                        onChange={updateSizeCheckboxes} />
-                    <label className="form-check-label" > 500 Pieces  </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="6" checked={searchSize.includes('6')}
-                        onChange={updateSizeCheckboxes} />
-                    <label className="form-check-label" > 520 Pieces  </label>
-                </div>                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="7" checked={searchSize.includes('7')}
-                        onChange={updateSizeCheckboxes} />
-                    <label className="form-check-label" > 1000 Pieces  </label>
-                </div>
-            </div>
+                    {/* Search by Difficulty Level (Checkboxes) */}
+                    <div className="search-div">
+                        <div><label className="form-label search-label">Difficulty Level</label></div>
+                        {difficultyLevels.map(level =>
+                            <div className="form-check-inline">
+                                <input className="form-check-input" type="checkbox" value={parseInt(level[0])}
+                                    checked={searchDifficultyLevel.includes(parseInt(level[0]))}
+                                    onChange={updateDifficultyCheckboxes} />
+                                <label className="form-check-label"> {level[1]} </label>
+                            </div>
+                        )}
+                    </div>
 
-            {/* Search by Tags (Checkboxes) */}
-            <div className="search-div">
-                <div><label className="form-label search-label">Tags</label></div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="1" checked={searchTag.includes('1')}
-                        onChange={updateTagCheckboxes} />
-                    <label className="form-check-label"> Multicolour </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="2" checked={searchTag.includes('2')}
-                        onChange={updateTagCheckboxes} />
-                    <label className="form-check-label" > Challenging </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="3" checked={searchTag.includes('3')}
-                        onChange={updateTagCheckboxes} />
-                    <label className="form-check-label" > Kids Friendly </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="4" checked={searchTag.includes('4')}
-                        onChange={updateTagCheckboxes} />
-                    <label className="form-check-label" > Irregular Shaped </label>
-                </div>
-                <div className="form-check-inline">
-                    <input className="form-check-input" type="checkbox" value="5" checked={searchTag.includes('5')}
-                        onChange={updateTagCheckboxes} />
-                    <label className="form-check-label" > Regular Shaped </label>
-                </div>
-            </div>
+                    {/* Search by Size - Pieces (Checkboxes) */}
+                    <div className="search-div">
+                        <div><label className="form-label search-label">Size</label></div>
+                        {sizes.map(size =>
+                            <div className="form-check-inline">
+                                <input className="form-check-input" type="checkbox" value={parseInt(size[0])}
+                                    checked={searchSize.includes(parseInt(size[0]))}
+                                    onChange={updateSizeCheckboxes} />
+                                <label className="form-check-label"> {size[1]} </label>
+                            </div>
+                        )}
+                    </div>
 
-            {/* Search Button */}
-            <button className="btn btn-danger btn-sm" onClick={() => searchProducts()}>Search</button>
+                    {/* Search by Tags (Checkboxes) */}
+                    <div className="search-div">
+                        <div><label className="form-label search-label">Tags</label></div>
+                        {tags.map(tag =>
+                            <div className="form-check-inline">
+                                <input className="form-check-input" type="checkbox" value={parseInt(tag[0])}
+                                    checked={searchTag.includes(parseInt(tag[0]))}
+                                    onChange={updateTagCheckboxes} />
+                                <label className="form-check-label"> {tag[1]} </label>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Search by Price */}
+                    <div className="search-div">
+                        <div><label className="form-label search-label">Price</label></div>
+                        <div id="price-search-div">
+                            <div>
+                                <label className="form-label">Min</label>
+                                <input type="number" className="form-control" value={searchMinPrice} onChange={(e) => setSearchMinPrice(e.target.value)} />
+                            </div>
+                            <div>
+                                <label className="form-label">Max</label>
+                                <input type="text" className="form-control" value={searchMaxPrice} onChange={(e) => setSearchMaxPrice(e.target.value)} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Search by Themes (Checkboxes) */}
+                    <div className="search-div">
+                        <div><label className="form-label search-label">Themes</label></div>
+                        {themes.map(theme =>
+                            <div className="form-check-inline">
+                                <input className="form-check-input" type="checkbox" value={parseInt(theme[0])}
+                                    checked={searchTheme.includes(parseInt(theme[0]))}
+                                    onChange={updateThemeCheckboxes} />
+                                <label className="form-check-label"> {theme[1]} </label>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Search by Age Group (Checkboxes) */}
+                    <div className="search-div">
+                        <div><label className="form-label search-label">Age Groups</label></div>
+                        {ageGroups.map(age =>
+                            <div className="form-check-inline">
+                                <input className="form-check-input" type="checkbox" value={parseInt(age[0])}
+                                    checked={searchAgeGroup.includes(parseInt(age[0]))}
+                                    onChange={updateAgeGroupCheckboxes} />
+                                <label className="form-check-label"> {age[1]} </label>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Search Button */}
+                    <button className="btn btn-danger btn-sm" onClick={() => searchProducts()}>Search</button>
+                </div>
+                : null}
         </div>
+
 
         {/* Display all Listings */}
         <div className="container">
