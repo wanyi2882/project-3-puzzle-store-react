@@ -2,6 +2,15 @@
   display: none;
 }
 
+.navbar-brand, .offcanvas-title, #navbar-expand-logo{
+  width: 60vw;
+  height: 50px;
+  background-image: url("./images/logo.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .offcanvas{
   transform: none !important;
   visibility: visible !important;
@@ -18,9 +27,38 @@
       display: none;
   }
 
+  #navbar-expand-logo{
+    width: 20vw;
+  }
+
   #expand-nav{
       background-color: white;
       width: 100vw;
       display: block;
+  }
+}
+
+@media screen and (min-width: 768px){
+  #navbar-expand-logo{
+      width: 50vw;
+  }
+}
+
+@media screen and (min-width: 992px){
+  #navbar-expand-logo{
+      width: 60vw;
+  }
+}
+
+@media screen and (min-width: 1200px){
+  #navbar-expand-logo{
+      width: 70vw;
+  }
+}
+
+@media screen and (min-width: 1920px){
+  #navbar-expand-logo{
+      width: 80vw;
+      align-self: flex-start;
   }
 }

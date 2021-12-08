@@ -8,13 +8,14 @@ import {
   Redirect
 } from 'react-router-dom';
 
-import ProductListing from "./ProductListing";
+import ProductListing from "./pages/ProductListing";
 import Register from "./pages/Register";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Restricted from "./pages/Restricted"
 import Cart from "./pages/Cart"
+import CheckoutSuccess from './pages/CheckoutSuccess';
 
 import ProductProvider from "./ProductProvider";
 import AuthService from "./services/auth.service";
@@ -28,7 +29,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("user")){
+    if (localStorage.getItem("user")) {
       setCurrentUser(true)
     }
   })
@@ -78,6 +79,8 @@ function App() {
       {/* Nav Bar when screen size more than 576px */}
       <nav id="expand-nav" className="container-fluid">
         <ul className="nav nav-tabs">
+          <Link to="/" className="link-style" ><li id="navbar-expand-logo" role="button"></li></Link>
+
           <li className="nav-item">
             <Link to="/" className="link-style" >
               <button className="nav-link">Home</button>
@@ -123,8 +126,7 @@ function App() {
       {/* Nav Bar when screen size less than 576px */}
       <nav id="collapsed-navbar" className="navbar navbar-light">
         <div className="container-fluid">
-          <div className="navbar-brand"
-            role="button">Logo</div>
+          <Link to="/"><div className="navbar-brand" role="button"></div></Link>
           <button className="navbar-toggler"
             type="button"
             onClick={() => toggleNav()}>
@@ -203,6 +205,9 @@ function App() {
             </Route>
             <Route exact path="/cart">
               {currentUser ? <Cart /> : <Restricted />}
+            </Route>
+            <Route exact path="/checkout/success">
+              {currentUser ? <CheckoutSuccess /> : <Restricted />}
             </Route>
           </Switch>
         </ProductProvider>

@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import authorizationHeader from "./services/authorization-header";
-import "./css/ProductListing.css"
+import authorizationHeader from "../services/authorization-header";
+import "../css/ProductListing.css"
 
-import ProductContext from './ProductContext';
+import ProductContext from '../ProductContext';
 
 export default function ProductListing() {
 
