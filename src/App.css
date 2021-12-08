@@ -8,7 +8,7 @@
   background-image: url("./images/logo.jpg");
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position:left;
 }
 
 .offcanvas{
@@ -28,7 +28,7 @@
   }
 
   #navbar-expand-logo{
-    width: 20vw;
+    width: 25vw;
   }
 
   #expand-nav{
@@ -40,19 +40,19 @@
 
 @media screen and (min-width: 768px){
   #navbar-expand-logo{
-      width: 50vw;
+      width: 45vw;
   }
 }
 
 @media screen and (min-width: 992px){
   #navbar-expand-logo{
-      width: 60vw;
+      width: 55vw;
   }
 }
 
 @media screen and (min-width: 1200px){
   #navbar-expand-logo{
-      width: 70vw;
+      width: 65vw;
   }
 }
 
