@@ -36,7 +36,7 @@ export default function Profile() {
         <p> Email: {user.email} </p>
       </div>
       <div>
-        <h3> Orders </h3>
+        <h3> Transactions </h3>
         {userOrders.map(order =>
           <div className="mt-2 mb-2" key={order.id}>
             <div className="card card-listing" role="button" >

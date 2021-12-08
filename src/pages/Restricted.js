@@ -12,7 +12,7 @@ export default function Restricted() {
     return (
         <React.Fragment>
             <h1>Access Denied</h1>
-            <p>You have entered a redirected page.</p>
+            <p>You have entered a restricted page.</p>
             <p>Please <span style={{color: "red"}} role="button" onClick={() => returnToLogin()}>login</span>.</p>
         </React.Fragment>
     )
