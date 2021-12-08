@@ -3,11 +3,17 @@ import axios from 'axios';
 import authorizationHeader from "../services/authorization-header";
 import "../css/ProductListing.css"
 
+import { HiChevronDoubleDown } from "react-icons/hi";
+import { HiChevronDoubleUp } from "react-icons/hi";
+
 import ProductContext from '../ProductContext';
 
 export default function ProductListing() {
 
+    const [modalBox, setModalBox] = useState(false)
+    const [modalBoxContent, setModalBoxContent] = useState({})
     const [searchDropdown, setSearchDropDown] = useState(false)
+    const [accordion, setAccordion] = useState(false)
     const [searchKeyword, setSearchKeyword] = useState("")
     const [searchDifficultyLevel, setSearchDifficultyLevel] = useState([])
     const [searchSize, setSearchSize] = useState([])
@@ -180,6 +186,20 @@ export default function ProductListing() {
             setSearchDropDown(false)
         }
     }
+
+    // Toggle Modal
+    const modalDisplay = (listings) => {
+        if (modalBox == false) {
+            setModalBoxContent(listings)
+            setModalBox(true)
+        } else {
+            setModalBoxContent({})
+            setModalBox(false)
+        }
+    }
+
+    // Toggle Information
+    
     return <React.Fragment>
         {/* Search Box */}
         <div id="searchbox" className="container">
@@ -280,15 +300,12 @@ export default function ProductListing() {
                 : null}
         </div>
 
-
         {/* Display all Listings */}
         <div className="container">
             <div className="row">
                 {context.getProducts().map(listings =>
                     <div className="col-12 col-sm-6 col-lg-4 mt-2 mb-2" key={listings.id}>
-                        <div className="card card-listing"
-                            role="button"
-                            key={listings.id}>
+                        <div className="card card-listing" role="button" key={listings.id} onClick={() => modalDisplay(listings)}>
                             <img className="card-img-top card-image"
                                 src={listings.image} />
                             <div className="card-body">
@@ -298,8 +315,60 @@ export default function ProductListing() {
                             <button className="btn btn-danger" onClick={() => addToCart(listings.id)}>Quick Add to Cart</button>
                         </div>
                     </div>
+
+
                 )}
             </div>
         </div>
+
+        {/* Display Modal Box */}
+        {modalBox ?
+            <div className="modal" tabIndex="-1" role="dialog"
+                style={{
+                    display: "block",
+                    backgroundColor: "rgba(0.5, 0.5, 0.5, 0.5)"
+                }}>
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">{modalBoxContent.title} </h5>
+                            <button type="button" className="close btn btn-secondary" data-dismiss="modal" aria-label="Close"
+                                onClick={() => modalDisplay()}>
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-12">
+                                        <img src={modalBoxContent.image} id="modal-image" />
+                                    </div>
+                                    <div className="col-12">
+                                        <hr />
+                                        <div id="modalCost">Price: ${((modalBoxContent.cost) / 100).toFixed(2)}</div>
+                                        <hr />
+                                        <div>{modalBoxContent.description}</div>
+                                        <hr />
+                                        <div>
+                                            <div role="button"
+                                                onClick={() => displayAccordion()}>
+                                                {this.state.displayAccordion ?
+                                                    <span>Puzzle Specifications <HiChevronDoubleUp /></span> :
+                                                    <span>Puzzle Specifications <HiChevronDoubleDown /></span>}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => modalDisplay()}>Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            : null}
     </React.Fragment>
 }

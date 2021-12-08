@@ -14,3 +14,29 @@
 #price-search-div{
     display: flex;
 }
+
+.card-listing:hover{
+    background-color: rgba(245, 240, 240, 0.61);
+}
+
+.card-image{
+    padding: 20px;
+}
+
+.card-body{
+    padding: 0px 16px 16px 16px !important;
+}
+
+.card-title{
+    font-weight: bold;
+}
+
+#modal-image{
+    border-radius: 30px;
+    width: 100%;
+    height: auto;
+}
+
+#modalCost{
+    font-weight: bold;
+}
