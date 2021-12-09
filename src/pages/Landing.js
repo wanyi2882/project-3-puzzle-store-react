@@ -23,6 +23,7 @@ export default function Landing() {
 
             {/* On Click of Scoll Down Icon, page goes down to diplay the product listing */}
             <div id="listings" className="container">
+                <h1>View All Puzzles</h1>
                 {ProductListing()}
             </div>
 

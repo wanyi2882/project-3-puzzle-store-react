@@ -26,3 +26,9 @@
     font-size: xx-large;
     margin-left: 85vw;
 }
+
+#listings > h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: bold;
+    margin-top: 10px;
+}
