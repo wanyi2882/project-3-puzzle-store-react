@@ -3,6 +3,13 @@
     margin-top: 5px;
 }
 
+#searchbox-div-button{
+    margin-left: 40vw;
+    border: 1px solid black;
+    border-radius: 15px;
+    text-align:end;
+}
+
 .search-div{
     margin-bottom: 10px;
 }

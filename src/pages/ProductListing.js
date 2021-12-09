@@ -5,6 +5,7 @@ import "../css/ProductListing.css"
 
 import { HiChevronDoubleDown } from "react-icons/hi";
 import { HiChevronDoubleUp } from "react-icons/hi";
+import { FaSearchPlus } from "react-icons/fa"
 
 import ProductContext from '../ProductContext';
 
@@ -211,7 +212,9 @@ export default function ProductListing() {
     return <React.Fragment>
         {/* Search Box */}
         <div id="searchbox" className="container">
-            <div role="button" onClick={() => toggleAccordion()}><h3>Search and Filter</h3></div>
+            <div id="searchbox-div-button" role="button" onClick={() => toggleAccordion()}>
+                Search <FaSearchPlus /> &nbsp; &nbsp;
+            </div>
 
             {/* Search Dropdown when toggled to true */}
             {searchDropdown ?
