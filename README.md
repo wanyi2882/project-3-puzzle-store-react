@@ -410,3 +410,6 @@ For headings and labels, the font size will be larger so as to bring the users a
 
 ## 9. Credits
 All images and content used are for educational purposes.
+
+**Images**
+Landing Page Banner: https://unsplash.com/photos/iB-E-cugv-I
