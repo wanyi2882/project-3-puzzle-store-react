@@ -13,7 +13,7 @@ export default function ProductListing() {
     const [modalBox, setModalBox] = useState(false)
     const [modalBoxContent, setModalBoxContent] = useState({})
     const [searchDropdown, setSearchDropDown] = useState(false)
-    const [accordion, setAccordion] = useState(false)
+    const [specificationAccordion, setSpecificationAccordion] = useState(false)
     const [searchKeyword, setSearchKeyword] = useState("")
     const [searchDifficultyLevel, setSearchDifficultyLevel] = useState([])
     const [searchSize, setSearchSize] = useState([])
@@ -195,11 +195,19 @@ export default function ProductListing() {
         } else {
             setModalBoxContent({})
             setModalBox(false)
+            setSpecificationAccordion(false)
         }
     }
 
-    // Toggle Information
-    
+    // Toggle Accordion in Modal Box
+    const displaySpecificationAccordion = () => {
+        if (specificationAccordion) {
+            setSpecificationAccordion(false)
+        } else {
+            setSpecificationAccordion(true)
+        }
+    }
+
     return <React.Fragment>
         {/* Search Box */}
         <div id="searchbox" className="container">
@@ -305,18 +313,17 @@ export default function ProductListing() {
             <div className="row">
                 {context.getProducts().map(listings =>
                     <div className="col-12 col-sm-6 col-lg-4 mt-2 mb-2" key={listings.id}>
-                        <div className="card card-listing" role="button" key={listings.id} onClick={() => modalDisplay(listings)}>
-                            <img className="card-img-top card-image"
-                                src={listings.image} />
-                            <div className="card-body">
-                                <h6 className="card-title">{listings.title}</h6>
-                                <span>${(listings.cost / 100).toFixed(2)}</span>
+                        <div className="card card-listing" role="button" key={listings.id}>
+                            <div onClick={() => modalDisplay(listings)}>
+                                <img className="card-img-top card-image" src={listings.image} />
+                                <div className="card-body">
+                                    <h6 className="card-title">{listings.title}</h6>
+                                    <span>${(listings.cost / 100).toFixed(2)}</span>
+                                </div>
                             </div>
                             <button className="btn btn-danger" onClick={() => addToCart(listings.id)}>Quick Add to Cart</button>
                         </div>
                     </div>
-
-
                 )}
             </div>
         </div>
@@ -340,22 +347,45 @@ export default function ProductListing() {
                         <div className="modal-body">
                             <div className="container">
                                 <div className="row">
-                                    <div className="col-12">
+                                    <div>
                                         <img src={modalBoxContent.image} id="modal-image" />
                                     </div>
-                                    <div className="col-12">
+                                    <div>
                                         <hr />
-                                        <div id="modalCost">Price: ${((modalBoxContent.cost) / 100).toFixed(2)}</div>
+                                        <span id="cost-span">Price: ${((modalBoxContent.cost) / 100).toFixed(2)}</span>
                                         <hr />
-                                        <div>{modalBoxContent.description}</div>
+                                        <span>{modalBoxContent.description}</span>
+                                        < hr />
+                                        <span id="pieces-span">{modalBoxContent.Size.pieces} Pieces</span>
                                         <hr />
                                         <div>
                                             <div role="button"
-                                                onClick={() => displayAccordion()}>
-                                                {this.state.displayAccordion ?
-                                                    <span>Puzzle Specifications <HiChevronDoubleUp /></span> :
-                                                    <span>Puzzle Specifications <HiChevronDoubleDown /></span>}
+                                                onClick={() => displaySpecificationAccordion()}>
+                                                {specificationAccordion ?
+                                                    <span className="specification-heading">Puzzle Specifications <HiChevronDoubleUp /></span> :
+                                                    <span className="specification-heading">Puzzle Specifications <HiChevronDoubleDown /></span>}
                                             </div>
+                                            {specificationAccordion ?
+                                                <div>
+                                                    <div>
+                                                        <span className="specification-subheading">Dimensions: </span>
+                                                        length {modalBoxContent.length}cm x breadth {modalBoxContent.breadth}cm
+                                                    </div>
+                                                    <div>
+                                                        <span className="specification-subheading">Theme: </span>{modalBoxContent.Theme.name}
+                                                    </div>
+                                                    <div>
+                                                        <span className="specification-subheading">Brand: </span>{modalBoxContent.brand}
+                                                    </div>
+                                                    <div>
+                                                        <span className="specification-subheading">Material: </span>{modalBoxContent.Material.type}
+                                                    </div>
+                                                    <div>
+                                                        <span className="specification-subheading">Frame Choice(s): </span>
+                                                        {modalBoxContent.Frame.map(each => each.material).join(", ")}
+                                                    </div>
+                                                </div>
+                                                : null}
                                         </div>
 
                                     </div>
@@ -363,7 +393,9 @@ export default function ProductListing() {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => modalDisplay()}>Close
+                            <button className="btn btn-danger" onClick={() => addToCart(modalBoxContent.id)}>Add to Cart</button>
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => modalDisplay()}>
+                                Close
                             </button>
                         </div>
                     </div>

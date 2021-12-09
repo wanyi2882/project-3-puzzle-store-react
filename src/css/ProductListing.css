@@ -37,6 +37,10 @@
     height: auto;
 }
 
-#modalCost{
+#cost-span, #pieces-span, .specification-heading{
+    font-weight: bold;
+}
+
+.specification-subheading{
     font-weight: bold;
 }
