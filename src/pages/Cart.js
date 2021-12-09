@@ -78,7 +78,7 @@ export default function Cart() {
             <div className="row">
                 {cart.map(content =>
                     <div className="mt-2 mb-2" key={content.id}>
-                        <div className="card card-listing" role="button" >
+                        <div className="card" role="button" >
                             <img src={content.Puzzle.image} alt={content.Puzzle.title} width="200" />
                             <div className="card-body">
                                 <h6 className="card-title">{content.Puzzle.title}</h6>
