@@ -1,16 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react';
+import FlashMessage from 'react-flash-message'
+
 import axios from 'axios';
 import authorizationHeader from "../services/authorization-header";
 import "../css/ProductListing.css"
 
-import { HiChevronDoubleDown } from "react-icons/hi";
-import { HiChevronDoubleUp } from "react-icons/hi";
-import { FaSearchPlus } from "react-icons/fa"
+import { HiChevronDoubleDown, HiChevronDoubleUp } from "react-icons/hi";
+import { FaSearchPlus, FaSearchMinus } from "react-icons/fa"
 
 import ProductContext from '../ProductContext';
 
 export default function ProductListing() {
 
+    const [cart, setCart] = useState([]);
     const [modalBox, setModalBox] = useState(false)
     const [modalBoxContent, setModalBoxContent] = useState({})
     const [searchDropdown, setSearchDropDown] = useState(false)
@@ -28,6 +30,7 @@ export default function ProductListing() {
     const [tags, setTags] = useState([])
     const [ageGroups, setAgeGroups] = useState([])
     const [searchAgeGroup, setSearchAgeGroup] = useState([])
+    const [displayFlash, setDisplayFlash] = useState(false)
 
     // Get Themes Table
     const getThemes = async () => {
@@ -59,6 +62,69 @@ export default function ProductListing() {
         setAgeGroups(ageGroup.data)
     }
 
+    // Get cart from local storage for non logged in users OR if logged in, get cart from 
+    const getLocalCart = async () => {
+
+        // User is logged in, get cart from DB
+        if (localStorage.getItem("user")) {
+            const response = await axios.get(process.env.REACT_APP_URL + "/api/cart", { headers: authorizationHeader() })
+            const cartData = response.data
+
+            // Check if local storage has any cart
+            // If exist to combine with cartData
+            if (localStorage.getItem("cart")) {
+                // Get local cart from local storage
+                let localCart = JSON.parse(localStorage.getItem("cart"))
+
+                // 1. Merge both arrays
+                // 2. Use Reducer function
+                const clonedCartArray = Object.values([...cartData, ...localCart].reduce((previousValue, currentValue) => {
+                    // 3. Puzzle Id not the same
+                    if (!previousValue[currentValue.Puzzle.id]) {
+                        previousValue[currentValue.Puzzle.id] = currentValue;
+                    } else {
+                        // 4. Puzzle ID same so add up the quantity together
+                        previousValue[currentValue.Puzzle.id].quantity += currentValue.quantity;
+                    }
+                    return previousValue;
+                }, {}));
+                setCart(clonedCartArray)
+                localStorage.removeItem("cart")
+
+                clonedCartArray.map(async eachItem => {
+                    // If there is already more than 1 item in the cart, we update the cart
+                    if (eachItem.quantity > 1) {
+                        await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
+                            {
+                                "puzzle_id": eachItem.Puzzle.id,
+                                "newQuantity": eachItem.quantity
+                            }
+                            , { headers: authorizationHeader() })
+                    } else if (eachItem.quantity == 1) {
+                        // If only one item in cart
+                        await axios.get(process.env.REACT_APP_URL + "/api/cart/add"
+                            + "?puzzle_id=" + eachItem.Puzzle.id,
+                            { headers: authorizationHeader() }
+                        )
+                    }
+                })
+            }
+            else {
+                // If nothing in local storage cart
+                setCart(cartData)
+            }
+        }
+
+        // If local storage has a cart
+        else if (localStorage.getItem("cart")) {
+            let localCart = JSON.parse(localStorage.getItem("cart"))
+            setCart(localCart)
+        } else {
+            // create an empty cart
+            localStorage.setItem("cart", JSON.stringify([]));
+        }
+    }
+
     // Use Effect (Component Did Mount)
     useEffect(() => {
         getThemes()
@@ -66,6 +132,12 @@ export default function ProductListing() {
         getSizes()
         getTags()
         getAges()
+        getLocalCart()
+
+        setInterval(() => {
+            setDisplayFlash(false)
+        }, 5000)
+
     }, [])
 
     // Use Product Context
@@ -77,15 +149,59 @@ export default function ProductListing() {
     }
 
     // Quick Add to Cart (Get Route)
-    let addToCart = async (puzzleId) => {
+    let addToCart = async (puzzleId, puzzle) => {
 
         try {
-            await axios.get(process.env.REACT_APP_URL + "/api/cart/add"
-                + "?puzzle_id=" + puzzleId,
-                { headers: authorizationHeader() }
-            ).then(() => alert("Item Added to cart"))
+            // User is logged in, get user id from localStorage
+            const localUser = JSON.parse(localStorage.getItem("user"))
+            if (localUser) {
+                await axios.get(process.env.REACT_APP_URL + "/api/cart/add"
+                    + "?puzzle_id=" + puzzleId,
+                    { headers: authorizationHeader() }
+                ).then(() =>
+                    setDisplayFlash(true)
+                )
+            } else {
+                // Get cart array and Clone cart array
+                let cloneOfLocalCart = cart
+
+                // If puzzle exist in clone array
+                if (cloneOfLocalCart.map(item => item.Puzzle.id).includes(puzzle.id)) {
+
+                    // Find the puzzle item
+                    let puzzleToUpdate = cloneOfLocalCart.find(item => item.Puzzle.id == puzzle.id)
+
+                    // Get the current quantity of the puzzle item
+                    let puzzleQuantityToUpdate = puzzleToUpdate.quantity
+
+                    // Get index of puzzle to update inside clone array
+                    let indexToUpdate = cloneOfLocalCart.indexOf(puzzleToUpdate)
+
+                    // Splice and remove puzzle from index and replace with updated puzzle object with new quantity
+                    cloneOfLocalCart.splice(indexToUpdate, 1, {
+                        "Puzzle": puzzle,
+                        "quantity": puzzleQuantityToUpdate + 1
+                    })
+
+                    setCart(cloneOfLocalCart)
+                    localStorage.setItem("cart", JSON.stringify(cloneOfLocalCart))
+                    setDisplayFlash(true)
+
+                } else {
+                    // If puzzle does not exist, add new puzzle object to array
+                    let clone = [...cloneOfLocalCart, {
+                        "Puzzle": puzzle,
+                        "quantity": 1
+                    }]
+
+                    // set cloned array to the local storage cart
+                    setCart(clone)
+                    localStorage.setItem("cart", JSON.stringify(clone))
+                    setDisplayFlash(true)
+                }
+            }
         } catch {
-            alert("Please login to add to cart")
+            alert("An error has occured please try again.")
         }
     };
 
@@ -210,10 +326,22 @@ export default function ProductListing() {
     }
 
     return <React.Fragment>
+        {displayFlash ?
+            <div id="addItemFlashMessage">
+                <FlashMessage duration={5000} persistOnHover={true}>
+                    <p>Item Has been added to Cart!</p>
+                </FlashMessage>
+            </div>
+            :
+            null}
+
         {/* Search Box */}
         <div id="searchbox" className="container">
             <div id="searchbox-div-button" role="button" onClick={() => toggleAccordion()}>
-                Search <FaSearchPlus /> &nbsp; &nbsp;
+                Search &nbsp;
+                {searchDropdown ? <FaSearchMinus />
+                    : <FaSearchPlus />
+                }
             </div>
 
             {/* Search Dropdown when toggled to true */}
@@ -324,7 +452,7 @@ export default function ProductListing() {
                                     <span>${(listings.cost / 100).toFixed(2)}</span>
                                 </div>
                             </div>
-                            <button className="btn btn-danger" onClick={() => addToCart(listings.id)}>Quick Add to Cart</button>
+                            <button className="btn btn-danger" onClick={() => addToCart(listings.id, listings)}>Quick Add to Cart</button>
                         </div>
                     </div>
                 )}
