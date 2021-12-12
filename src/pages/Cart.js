@@ -68,7 +68,9 @@ export default function Cart() {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"))
-        setUser(user.id)
+        if (user){
+            setUser(user.id)
+        }
 
         getCart()
     }, [])
