@@ -27,6 +27,8 @@ import "./App.css";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(false);
+  const [navDropdown, setNavDropdown] = useState(false);
+
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -57,12 +59,10 @@ function App() {
     AuthService.logout(refreshToken);
 
     setCurrentUser(false);
+    setNavDropdown(false);
 
     alert("you have successfully logout!")
   };
-
-  // Set state for navDropdown
-  const [navDropdown, setNavDropdown] = useState(false)
 
   // Toggle Collapsed Nav Hamburger
   let toggleNav = () => {
@@ -99,13 +99,11 @@ function App() {
               </Link>
             </li>
             : null}
-          {currentUser
-            ? <li className="nav-item">
-              <Link to="/cart" className="link-style" >
-                <button className="nav-link">Cart</button>
-              </Link>
-            </li>
-            : null}
+          <li className="nav-item">
+            <Link to="/cart" className="link-style" >
+              <button className="nav-link">Cart</button>
+            </Link>
+          </li>
           {currentUser
             ? <li className="nav-item">
               <Link to="/profile" className="link-style" >
@@ -158,12 +156,9 @@ function App() {
                     </li>
                     :
                     null}
-                  {currentUser
-                    ? <li className="nav-item">
-                      <Link to='/cart' className="nav-link" onClick={() => toggleNav()}>Cart</Link>
-                    </li>
-                    :
-                    null}
+                  <li className="nav-item">
+                    <Link to='/cart' className="nav-link" onClick={() => toggleNav()}>Cart</Link>
+                  </li>
                   {currentUser
                     ? <li className="nav-item">
                       <Link to='/profile' className="nav-link" onClick={() => toggleNav()}>Profile</Link>
@@ -204,7 +199,7 @@ function App() {
               {currentUser ? <Profile /> : <Restricted />}
             </Route>
             <Route exact path="/cart">
-              {currentUser ? <Cart /> : <Restricted />}
+              <Cart />
             </Route>
             <Route exact path="/checkout/success">
               {currentUser ? <CheckoutSuccess /> : <Restricted />}
