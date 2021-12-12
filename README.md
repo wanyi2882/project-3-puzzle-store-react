@@ -344,6 +344,8 @@ For headings and labels, the font size will be larger so as to bring the users a
 24. Stripe Checkout
 - Secure payment platform for online payments.
 
+25. React Scroll
+- React component for animating vertical scrolling.
 
 ## 6. Testing Steps
 
