@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom'
 import axios from "axios"
 import ProductContext from "./ProductContext";
 
@@ -16,38 +17,57 @@ export default function ProductProvider(props) {
     const [searchTheme, setSearchTheme] = useState([])
     const [searchAge, setSearchAge] = useState([])
 
+    const location = useLocation();
+
+        const resetSearch = () => {
+        setSearchKeyword("")
+        setSearchDifficultyLevel([])
+        setSearchSize([])
+        setSearchTag([])
+        setSearchMinPrice("")
+        setSearchMaxPrice("")
+        setSearchTheme([])
+        setSearchAge([])
+    }
+
     // Use Effect To fetch all Products
     useEffect(() => {
         const listings = async () => {
             const response = await axios.get(process.env.REACT_APP_URL + "/api/listings"
-            + "?keyword=" + searchKeyword
-            + "&"
-            + "difficulty_level=" + searchDifficultyLevel
-            + "&"
-            + "size=" + searchSize
-            + "&"
-            + "tags=" + searchTag
-            + "&"
-            + "min_cost=" + searchMinPrice
-            + "&"
-            + "max_cost=" + searchMaxPrice
-            + "&"
-            + "theme=" + searchTheme
-            + "&"
-            + "age_group=" + searchAge)
+                + "?keyword=" + searchKeyword
+                + "&"
+                + "difficulty_level=" + searchDifficultyLevel
+                + "&"
+                + "size=" + searchSize
+                + "&"
+                + "tags=" + searchTag
+                + "&"
+                + "min_cost=" + searchMinPrice
+                + "&"
+                + "max_cost=" + searchMaxPrice
+                + "&"
+                + "theme=" + searchTheme
+                + "&"
+                + "age_group=" + searchAge)
 
             const data = response.data
             setProducts(data)
         }
+        
         listings()
+
     }, [searchKeyword, searchDifficultyLevel, searchSize, searchTag, searchMinPrice, searchMaxPrice, searchTheme, searchAge])
+
+    useEffect(()=>{
+        resetSearch()
+    }, [location])
 
     const context = {
         getProducts: () => {
             return products
         },
-        getSearch: (searchKeywordProp, searchDifficultyLevelProp, searchSizeProp, searchTagProp, searchMinPriceProp, searchMaxPriceProp, 
-                    searchThemeProp, searchAgeProp) => {
+        getSearch: (searchKeywordProp, searchDifficultyLevelProp, searchSizeProp, searchTagProp, searchMinPriceProp, searchMaxPriceProp,
+            searchThemeProp, searchAgeProp) => {
             setSearchKeyword(searchKeywordProp)
             setSearchDifficultyLevel(searchDifficultyLevelProp)
             setSearchSize(searchSizeProp)
