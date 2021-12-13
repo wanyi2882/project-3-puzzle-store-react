@@ -23,7 +23,7 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState("")
 
     const sendData = async () => {
-        await axios.post(process.env.REACT_APP_URL + "/api/users/register",
+        await axios.post("https://ywy-puzzle-store-project.herokuapp.com" + "/api/users/register",
             {
                 "username": username,
                 "email": email,
