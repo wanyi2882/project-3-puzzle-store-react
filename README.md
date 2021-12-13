@@ -405,9 +405,13 @@ For headings and labels, the font size will be larger so as to bring the users a
 
 
 ## 7. Future Features Implementation / Bugs
+- Manage stock count and display stock not available if stock count is 0
+- Cart number count so that user will know the amount of items in the cart at a glance
 
 
 ## 8. Deployment Steps
+For express deployment you can refer to https://devcenter.heroku.com/articles/preparing-a-codebase-for-heroku-deployment
+
 
 
 ## 9. Credits
