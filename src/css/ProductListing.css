@@ -1,14 +1,21 @@
-#searchbox{
+#display-listings > h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#listings{
     background-color: white;
     margin-top: 5px;
 }
 
 #searchbox-div-button{
-    margin-left: 60vw;
+    margin-left: 55vw;
     border: 1px solid black;
     border-radius: 15px;
     text-align:center;
     width: 30vw;
+    font-size: 1em;
 }
 
 .search-div{
@@ -21,6 +28,16 @@
 
 #price-search-div{
     display: flex;
+}
+
+#price-search-div-1{
+    margin-right: 10px;
+}
+
+#searchButton, #resetSearchButton{
+    margin-left: 5vw;
+    font-size: 1em;
+    width: 30vw;
 }
 
 .card-listing:hover{
@@ -61,3 +78,23 @@
     bottom: 0px;
     right: 10px;
 }
+
+@media screen and (min-width: 768px){
+    #searchButton{
+        margin-left: 1vw;
+    }
+}
+
+@media screen and (min-width: 992px){
+    #searchbox-div-button{
+        margin-left: 65vw;
+        width: 20vw;
+        font-size: 1.5em;
+    }
+
+    #searchButton, #resetSearchButton{
+        font-size: 1.5em;
+        width: 10vw;
+    }
+}
+  

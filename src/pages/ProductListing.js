@@ -38,7 +38,7 @@ export default function ProductListing() {
         setThemes(theme.data)
     }
 
-    // Get Themes Table
+    // Get Levels Table
     const getLevels = async () => {
         let level = await axios.get(process.env.REACT_APP_URL + "/api/listings/get_difficulty_levels")
         setDifficultyLevels(level.data)
@@ -124,7 +124,7 @@ export default function ProductListing() {
             localStorage.setItem("cart", JSON.stringify([]));
         }
     }
-
+    
     // Use Effect (Component Did Mount)
     useEffect(() => {
         getThemes()
@@ -146,6 +146,21 @@ export default function ProductListing() {
     // Set props to Product Provider 
     let searchProducts = () => {
         context.getSearch(searchKeyword, searchDifficultyLevel, searchSize, searchTag, searchMinPrice, searchMaxPrice, searchTheme, searchAgeGroup)
+    }
+
+    // Reset Search
+    let resetSearch = () => {
+        setSearchKeyword("")
+        setSearchDifficultyLevel([])
+        setSearchSize([])
+        setSearchTag([])
+        setSearchMinPrice("")
+        setSearchMaxPrice("")
+        setSearchTheme("")
+        setSearchAgeGroup([])
+
+        context.getSearch("", [], [], [], "", "", "", [])
+
     }
 
     // Quick Add to Cart (Get Route)
@@ -336,7 +351,7 @@ export default function ProductListing() {
             null}
 
         {/* Search Box */}
-        <div id="searchbox" className="container">
+        <div id="listings" className="container">
             <div id="searchbox-div-button" role="button" onClick={() => toggleAccordion()}>
                 Search &nbsp;
                 {searchDropdown ? <FaSearchMinus />
@@ -346,15 +361,15 @@ export default function ProductListing() {
 
             {/* Search Dropdown when toggled to true */}
             {searchDropdown ?
-                <div>
+                <div className="row">
                     {/* Keyword Search */}
-                    <div className="search-div">
+                    <div className="search-div col-12 col-lg-6">
                         <label className="form-label search-label">Keyword Search</label>
                         <input type="text" className="form-control" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
                     </div>
 
                     {/* Search by Difficulty Level (Checkboxes) */}
-                    <div className="search-div">
+                    <div className="search-div col-12 col-lg-6">
                         <div><label className="form-label search-label">Difficulty Level</label></div>
                         {difficultyLevels.map(level =>
                             <div className="form-check-inline">
@@ -367,7 +382,7 @@ export default function ProductListing() {
                     </div>
 
                     {/* Search by Size - Pieces (Checkboxes) */}
-                    <div className="search-div">
+                    <div className="search-div col-12 col-lg-6">
                         <div><label className="form-label search-label">Size</label></div>
                         {sizes.map(size =>
                             <div className="form-check-inline">
@@ -380,7 +395,7 @@ export default function ProductListing() {
                     </div>
 
                     {/* Search by Tags (Checkboxes) */}
-                    <div className="search-div">
+                    <div className="search-div col-12 col-lg-6">
                         <div><label className="form-label search-label">Tags</label></div>
                         {tags.map(tag =>
                             <div className="form-check-inline">
@@ -393,10 +408,10 @@ export default function ProductListing() {
                     </div>
 
                     {/* Search by Price */}
-                    <div className="search-div">
+                    <div className="search-div col-12 col-lg-6">
                         <div><label className="form-label search-label">Price</label></div>
                         <div id="price-search-div">
-                            <div>
+                            <div id="price-search-div-1">
                                 <label className="form-label">Min</label>
                                 <input type="number" className="form-control" value={searchMinPrice} onChange={(e) => setSearchMinPrice(e.target.value)} />
                             </div>
@@ -408,7 +423,7 @@ export default function ProductListing() {
                     </div>
 
                     {/* Search by Themes (Checkboxes) */}
-                    <div className="search-div">
+                    <div className="search-div col-12 col-lg-6">
                         <div><label className="form-label search-label">Themes</label></div>
                         {themes.map(theme =>
                             <div className="form-check-inline">
@@ -421,7 +436,7 @@ export default function ProductListing() {
                     </div>
 
                     {/* Search by Age Group (Checkboxes) */}
-                    <div className="search-div">
+                    <div className="search-div col-12 col-lg-6">
                         <div><label className="form-label search-label">Age Groups</label></div>
                         {ageGroups.map(age =>
                             <div className="form-check-inline">
@@ -434,17 +449,20 @@ export default function ProductListing() {
                     </div>
 
                     {/* Search Button */}
-                    <button className="btn btn-danger btn-sm" onClick={() => searchProducts()}>Search</button>
+                    <button id="searchButton" className="btn btn-danger btn-sm" onClick={() => searchProducts()}>Search</button>
+                    <button id="resetSearchButton" className="btn btn-success btn-sm" onClick={() => resetSearch()}>Reset</button>
+
                 </div>
                 : null}
         </div>
 
         {/* Display all Listings */}
-        <div className="container">
+        <div id="display-listings" className="container">
+        <h1>View All Puzzles</h1>
             <div className="row">
                 {context.getProducts().map(listings =>
                     <div className="col-12 col-sm-6 col-lg-4 mt-2 mb-2" key={listings.id}>
-                        <div className="card card-listing" role="button" key={listings.id}>
+                        <div className="card card-listing" role="button">
                             <div onClick={() => modalDisplay(listings)}>
                                 <img className="card-img-top card-image" src={listings.image} />
                                 <div className="card-body">
