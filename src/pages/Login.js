@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import "../css/Login.css"
 
 // Create Hash Password
 const createHash = require('create-hash')
@@ -24,7 +25,7 @@ export default function Login({login}) {
             <h1>Login</h1>
             <div>
                 <div>
-                    <label className="form-label">Email:</label>
+                    <label className="form-label login-label">Email:</label>
                     <input type="text"
                         className="form-control"
                         name="email"
@@ -32,7 +33,7 @@ export default function Login({login}) {
                         onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div>
-                    <label className="form-label">Password:</label>
+                    <label className="form-label login-label">Password:</label>
                     <input type="password"
                         className="form-control"
                         value={password}
@@ -40,7 +41,7 @@ export default function Login({login}) {
                 </div>
             </div>
 
-            <button className="btn btn-primary mx-2"
+            <button id="login-btn" className="btn mx-2 mt-2"
                 onClick={() => onsubmit()}>Login</button>
         </div>
     </React.Fragment>
