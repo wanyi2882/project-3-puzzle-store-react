@@ -83,12 +83,18 @@
 }
 
 #addItemFlashMessage{
-    background-color: grey;
-    color: white;
+    background-color: #FF7D00;
+    color: black;
+    font-size: 1.5em;
+    font-weight: bold;
     z-index: 999;
     position: fixed;
-    bottom: 0px;
-    right: 10px;
+    bottom: 50px;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 15px;
+    margin-left: 15vw;
+    width: 70vw;
 }
 
 @media screen and (min-width: 768px){
