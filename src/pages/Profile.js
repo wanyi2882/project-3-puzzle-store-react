@@ -7,6 +7,7 @@ export default function Profile() {
 
   const [user, setUser] = useState([]);
   const [userOrders, setUserOrders] = useState([])
+  const [orderDetails, setOrderDetails] = ([])
 
   // Retrieving profile of user 
   // If Authorization Request Header retrieve from local store through auth-header
@@ -21,6 +22,12 @@ export default function Profile() {
     const response = await axios.get(process.env.REACT_APP_URL + "/api/orders", { headers: authorizationHeader() })
     const orders = response.data
     setUserOrders(orders)
+  }
+
+  const getOrderDetails = async (id) => {
+    const response = await axios.get(process.env.REACT_APP_URL + "/api/orders/" + { id } + "/details", { headers: authorizationHeader() })
+    const orderDetailsContent = response.data
+    setOrderDetails(orderDetailsContent)
   }
 
   useEffect(() => {
@@ -47,8 +54,17 @@ export default function Profile() {
                 <span>Sent to: {order.shipping_address}</span> <br />
                 <span>Status: {order.OrderStatus.status}</span>
                 <div>
-                <button className="btn btn-primary"> More Details </button>
-              </div>
+                  <button className="btn btn-primary" onClick={() => getOrderDetails(order.id)}> More Details </button>
+                </div>
+                
+                {orderDetails.map(each =>
+                  <div>
+                    <div>Title: {each.Puzzle.title}</div>
+                    <div>Quantity: {each.quantity}</div>
+                    <div>Price: {each.individual_cost}</div>
+                  </div>
+                  
+                )}
               </div>
 
             </div>
