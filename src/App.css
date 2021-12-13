@@ -1,8 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow&family=Lato&family=Playfair+Display&display=swap');
+
+body {
+  background-image: url("./images/background.jpg");
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 hr {
   margin: 0.5rem 0;
 }
 #expand-nav {
   display: none;
+}
+
+.nav-item{
+  font-family: 'Playfair Display', serif;
+  color: #001524 !important;
+  text-decoration: none !important;
 }
 
 .navbar-brand, .offcanvas-title, #navbar-expand-logo{
