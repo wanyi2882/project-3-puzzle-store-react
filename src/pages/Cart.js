@@ -68,7 +68,7 @@ export default function Cart() {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"))
-        if (user){
+        if (user) {
             setUser(user.id)
         }
 
@@ -84,13 +84,19 @@ export default function Cart() {
 
         const quantity = cart[index].quantity
 
-        await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
-            {
-                "puzzle_id": puzzle_id,
-                "newQuantity": quantity
-            }
-            , { headers: authorizationHeader() })
-
+        // Logged in User
+        if (localStorage.getItem("user")) {
+            await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
+                {
+                    "puzzle_id": puzzle_id,
+                    "newQuantity": quantity
+                }
+                , { headers: authorizationHeader() })
+        } else {
+            // Not logged in
+            localStorage.removeItem("cart")
+            localStorage.setItem("cart", JSON.stringify(updateCart));
+        }
     }
 
     // Minus one quantity from item
@@ -103,25 +109,41 @@ export default function Cart() {
 
             const quantity = cart[index].quantity
 
-            await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
-                {
-                    "puzzle_id": puzzle_id,
-                    "newQuantity": quantity
-                }
-                , { headers: authorizationHeader() })
+            //Logged in user
+            if (localStorage.getItem("user")) {
+                await axios.post(process.env.REACT_APP_URL + "/api/cart/quantity/update",
+                    {
+                        "puzzle_id": puzzle_id,
+                        "newQuantity": quantity
+                    }
+                    , { headers: authorizationHeader() })
+            } else {
+                // Not logged in
+                localStorage.removeItem("cart")
+                localStorage.setItem("cart", JSON.stringify(updateCart));
+            }
         }
     }
 
     // Remove item from cart
-    const removeFromCart = async (puzzle_id) => {
+    const removeFromCart = async (index, puzzle_id) => {
 
-        await axios.post(process.env.REACT_APP_URL + "/api/cart/remove",
-            {
-                "puzzle_id": puzzle_id
-            }
-            , { headers: authorizationHeader() })
-            .then(() => getCart())
+        cart.splice(index,1)
 
+        // Logged in user
+        if (localStorage.getItem("user")) {
+            await axios.post(process.env.REACT_APP_URL + "/api/cart/remove",
+                {
+                    "puzzle_id": puzzle_id
+                }
+                , { headers: authorizationHeader() })
+                .then(() => getCart())
+        } else {
+            // Not logged in
+            localStorage.removeItem("cart")
+            localStorage.setItem("cart", JSON.stringify(cart));
+            getCart()
+        }
     }
 
     return <React.Fragment>
@@ -143,7 +165,7 @@ export default function Cart() {
                                     <button className="btn btn-primary btn-sm mx-1"
                                         onClick={() => updateCartAdd(cart.indexOf(content), content.Puzzle.id)}>+</button>
                                     <button className="btn btn-danger btn-sm mx-1"
-                                        onClick={() => removeFromCart(content.Puzzle.id)}>Remove</button>
+                                        onClick={() => removeFromCart(cart.indexOf(content), content.Puzzle.id)}>Remove</button>
                                 </div>
                                 <div>
                                     Sub-Total: ${((content.quantity * content.Puzzle.cost) / 100).toFixed(2)}
