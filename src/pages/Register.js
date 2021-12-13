@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import "../css/Register.css"
 
 import axios from 'axios'
 
@@ -64,28 +65,28 @@ export default function Register() {
             <h1>Create Account</h1>
             <div>
                 <div>
-                    <label className="form-label ">User Name:</label>
+                    <label className="form-label register-form-label">User Name:</label>
                     <input type="text"
                         className="form-control"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)} />
                 </div>
                 <div>
-                    <label className="form-label">Email:</label>
+                    <label className="form-label register-form-label">Email:</label>
                     <input type="text"
                         className="form-control"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div>
-                    <label className="form-label">Password:</label>
+                    <label className="form-label register-form-label">Password:</label>
                     <input type="password"
                         className="form-control"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div>
-                    <label className="form-label">Password:</label>
+                    <label className="form-label register-form-label"> Confirm Password:</label>
                     <input type="password"
                         className="form-control"
                         value={confirmPassword}
@@ -93,10 +94,10 @@ export default function Register() {
                 </div>
             </div>
 
-            <button className="btn btn-primary mx-2"
+            <button className="btn btn-primary mt-2 mx-2"
                 onClick={() => createAccount()}>Create New Account</button>
 
-            <button className="btn btn-danger">
+            <button className="btn btn-danger mt-2">
                 <Link to="/login" className="link-style" >Cancel</Link>
             </button>
         </div>
