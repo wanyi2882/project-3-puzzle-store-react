@@ -1,13 +1,13 @@
 import React from "react";
-
+import "../css/CheckoutSuccess.css"
 export default function CheckoutSuccess() {
 
     return <React.Fragment>
         <div className="container">
-            <div>
-                <h3>Payment Successful</h3>
+            <div id="checkout-div">
+                <h1>Payment Successful</h1>
             </div>
-            <button className="btn">
+            <button className="btn btn-light mx-3">
                 <a href="/listings">Return to Listings</a>
             </button>
         </div>
