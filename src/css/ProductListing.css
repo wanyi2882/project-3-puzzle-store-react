@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow&family=Lato&family=Playfair+Display&display=swap');
+
 #display-listings > h1 {
     font-family: 'Playfair Display', serif;
     font-weight: bold;
@@ -5,8 +7,13 @@
 }
 
 #listings{
-    background-color: white;
     margin-top: 5px;
+}
+
+.add-to-cart{
+    color: #FF7D00!important;
+    font-size: 1.5em !important;
+    text-align: right !important;
 }
 
 #searchbox-div-button{

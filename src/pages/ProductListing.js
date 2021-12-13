@@ -5,8 +5,7 @@ import axios from 'axios';
 import authorizationHeader from "../services/authorization-header";
 import "../css/ProductListing.css"
 
-import { HiChevronDoubleDown, HiChevronDoubleUp } from "react-icons/hi";
-import { FaSearchPlus, FaSearchMinus } from "react-icons/fa"
+import { FaSearchPlus, FaSearchMinus, FaCartPlus } from "react-icons/fa"
 
 import ProductContext from '../ProductContext';
 
@@ -16,7 +15,6 @@ export default function ProductListing() {
     const [modalBox, setModalBox] = useState(false)
     const [modalBoxContent, setModalBoxContent] = useState({})
     const [searchDropdown, setSearchDropDown] = useState(false)
-    const [specificationAccordion, setSpecificationAccordion] = useState(false)
     const [searchKeyword, setSearchKeyword] = useState("")
     const [searchDifficultyLevel, setSearchDifficultyLevel] = useState([])
     const [searchSize, setSearchSize] = useState([])
@@ -146,6 +144,8 @@ export default function ProductListing() {
     // Set props to Product Provider 
     let searchProducts = () => {
         context.getSearch(searchKeyword, searchDifficultyLevel, searchSize, searchTag, searchMinPrice, searchMaxPrice, searchTheme, searchAgeGroup)
+
+        setSearchDropDown(false)
     }
 
     // Reset Search
@@ -161,6 +161,7 @@ export default function ProductListing() {
 
         context.getSearch("", [], [], [], "", "", "", [])
 
+        setSearchDropDown(false)
     }
 
     // Quick Add to Cart (Get Route)
@@ -327,7 +328,6 @@ export default function ProductListing() {
         } else {
             setModalBoxContent({})
             setModalBox(false)
-            setSpecificationAccordion(false)
         }
     }
 
@@ -467,7 +467,7 @@ export default function ProductListing() {
                                     </div>
                                 </div>
                             </div>
-                            <button className="btn btn-danger" onClick={() => addToCart(listings.id, listings)}>Quick Add to Cart</button>
+                            <button className="btn add-to-cart" onClick={() => addToCart(listings.id, listings)}>Add to Cart <FaCartPlus /></button>
                         </div>
                     </div>
                 )}
@@ -530,7 +530,7 @@ export default function ProductListing() {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button className="btn btn-danger" onClick={() => addToCart(modalBoxContent.id)}>Add to Cart</button>
+                            <button className="btn add-to-cart" onClick={() => addToCart(modalBoxContent.id)}>Add to Cart<FaCartPlus /></button>
                             <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => modalDisplay()}>
                                 Close
                             </button>
