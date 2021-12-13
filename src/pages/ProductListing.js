@@ -124,7 +124,7 @@ export default function ProductListing() {
             localStorage.setItem("cart", JSON.stringify([]));
         }
     }
-    
+
     // Use Effect (Component Did Mount)
     useEffect(() => {
         getThemes()
@@ -331,15 +331,6 @@ export default function ProductListing() {
         }
     }
 
-    // Toggle Accordion in Modal Box
-    const displaySpecificationAccordion = () => {
-        if (specificationAccordion) {
-            setSpecificationAccordion(false)
-        } else {
-            setSpecificationAccordion(true)
-        }
-    }
-
     return <React.Fragment>
         {displayFlash ?
             <div id="addItemFlashMessage">
@@ -458,7 +449,7 @@ export default function ProductListing() {
 
         {/* Display all Listings */}
         <div id="display-listings" className="container">
-        <h1>View All Puzzles</h1>
+            <h1>View All Puzzles</h1>
             <div className="row">
                 {context.getProducts().map(listings =>
                     <div className="col-12 col-sm-6 col-lg-4 mt-2 mb-2" key={listings.id}>
@@ -468,6 +459,12 @@ export default function ProductListing() {
                                 <div className="card-body">
                                     <h6 className="card-title">{listings.title}</h6>
                                     <span>${(listings.cost / 100).toFixed(2)}</span>
+                                    <div>
+                                        Tags:
+                                        {listings.Tag.map(eachTag =>
+                                            <span className="tags-span">{eachTag.name}</span>
+                                            )}
+                                    </div>
                                 </div>
                             </div>
                             <button className="btn btn-danger" onClick={() => addToCart(listings.id, listings)}>Quick Add to Cart</button>
@@ -508,33 +505,24 @@ export default function ProductListing() {
                                         <span id="pieces-span">{modalBoxContent.Size.pieces} Pieces</span>
                                         <hr />
                                         <div>
-                                            <div role="button"
-                                                onClick={() => displaySpecificationAccordion()}>
-                                                {specificationAccordion ?
-                                                    <span className="specification-heading">Puzzle Specifications <HiChevronDoubleUp /></span> :
-                                                    <span className="specification-heading">Puzzle Specifications <HiChevronDoubleDown /></span>}
+                                            <div>
+                                                <span className="specification-heading">Puzzle Specifications </span>
                                             </div>
-                                            {specificationAccordion ?
+                                            <div>
                                                 <div>
-                                                    <div>
-                                                        <span className="specification-subheading">Dimensions: </span>
-                                                        length {modalBoxContent.length}cm x breadth {modalBoxContent.breadth}cm
-                                                    </div>
-                                                    <div>
-                                                        <span className="specification-subheading">Theme: </span>{modalBoxContent.Theme.name}
-                                                    </div>
-                                                    <div>
-                                                        <span className="specification-subheading">Brand: </span>{modalBoxContent.brand}
-                                                    </div>
-                                                    <div>
-                                                        <span className="specification-subheading">Material: </span>{modalBoxContent.Material.type}
-                                                    </div>
-                                                    <div>
-                                                        <span className="specification-subheading">Frame Choice(s): </span>
-                                                        {modalBoxContent.Frame.map(each => each.material).join(", ")}
-                                                    </div>
+                                                    <span className="specification-subheading">Dimensions: </span>
+                                                    length {modalBoxContent.length}cm x breadth {modalBoxContent.breadth}cm
                                                 </div>
-                                                : null}
+                                                <div>
+                                                    <span className="specification-subheading">Theme: </span>{modalBoxContent.Theme.name}
+                                                </div>
+                                                <div>
+                                                    <span className="specification-subheading">Brand: </span>{modalBoxContent.brand}
+                                                </div>
+                                                <div>
+                                                    <span className="specification-subheading">Material: </span>{modalBoxContent.Material.type}
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
