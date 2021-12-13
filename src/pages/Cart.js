@@ -188,7 +188,7 @@ export default function Cart() {
                 <div>
                     {/* Checkout to Stripe */}
                     {localStorage.getItem("user") ?
-                        <form action={"https://ywy-puzzle-store-project.herokuapp.com " + "/api/checkout/create-checkout-session"} method="POST">
+                        <form action={"https://ywy-puzzle-store-project.herokuapp.com" + "/api/checkout/create-checkout-session"} method="POST">
                             <div style={{ visibility: 'hidden' }} >
                                 <input name="userId" id="userId" value={user} />
                             </div>
