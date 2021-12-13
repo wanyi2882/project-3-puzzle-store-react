@@ -196,8 +196,8 @@ export default function Cart() {
                                 Checkout
                             </button>
                         </form>
-                        : <button className="btn btn-danger">
-                            Login to checkout
+                        : <button className="btn btn-light">
+                            <a href="/login">Login to checkout</a>
                         </button>
                     }
                 </div>
