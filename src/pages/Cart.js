@@ -187,20 +187,19 @@ export default function Cart() {
                 </div>
                 <div>
                     {/* Checkout to Stripe */}
-                    <form action={process.env.REACT_APP_URL + "/api/checkout/create-checkout-session"} method="POST">
-                        <div style={{ visibility: 'hidden' }} >
-                            <input name="userId" id="userId" value={user} />
-                        </div>
-                        {localStorage.getItem("user") ?
+                    {localStorage.getItem("user") ?
+                        <form action={process.env.REACT_APP_URL + "/api/checkout/create-checkout-session"} method="POST">
+                            <div style={{ visibility: 'hidden' }} >
+                                <input name="userId" id="userId" value={user} />
+                            </div>
                             <button type="submit" className="btn btn-success" id="checkout-btn">
                                 Checkout
                             </button>
-                            :
-                            <button className="btn btn-danger">
-                                Login to checkout
-                            </button>
-                        }
-                    </form>
+                        </form>
+                        : <button className="btn btn-danger">
+                            Login to checkout
+                        </button>
+                    }
                 </div>
             </div>
         }
