@@ -56,15 +56,7 @@ export default function Profile() {
                 <div>
                   <button className="btn btn-primary" onClick={() => getOrderDetails(order.id)}> More Details </button>
                 </div>
-                
-                {orderDetails.map(each =>
-                  <div>
-                    <div>Title: {each.Puzzle.title}</div>
-                    <div>Quantity: {each.quantity}</div>
-                    <div>Price: {each.individual_cost}</div>
-                  </div>
-                  
-                )}
+                {}
               </div>
 
             </div>
