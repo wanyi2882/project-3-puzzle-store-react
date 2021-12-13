@@ -415,3 +415,14 @@ All images and content used are for educational purposes.
 
 **Images**
 Landing Page Banner: https://unsplash.com/photos/iB-E-cugv-I
+Background for all pages: https://www.freepik.com/free-photo/scratched-beige-wooden-textured_11298744.htm#page=1&query=table&position=9&from_view=search
+
+**Product Images**
+1. https://m.media-amazon.com/images/I/71hhvHuGi0L._AC_SL1439_.jpg
+2. https://m.media-amazon.com/images/I/81NDf8l0OwL._AC_SL1195_.jpg
+3. https://m.media-amazon.com/images/I/818k98jkPHL._AC_SL1500_.jpg
+4. https://m.media-amazon.com/images/I/71UqIEWRrLS._AC_SL1000_.jpg
+5. https://www.jigsawpuzzleworld.com.sg/product/ana-500-3533
+
+
+
