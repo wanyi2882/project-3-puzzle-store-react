@@ -16,14 +16,13 @@ export default function Landing() {
                 </div>
                 <div id="down-arrow-to-searchbox">
                 <Link to="listings" spy={true} smooth={true}>
-                    <BsArrowDownCircle/>
+                    <div role="button"><BsArrowDownCircle/></div>
                 </Link>                    
                 </div>
             </div>
 
             {/* On Click of Scoll Down Icon, page goes down to diplay the product listing */}
-            <div id="listings" className="container">
-                <h1>View All Puzzles</h1>
+            <div className="container">
                 {ProductListing()}
             </div>
 
