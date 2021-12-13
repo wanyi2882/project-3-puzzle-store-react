@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import "../css/Cart.css"
 
 import axios from "axios";
 
@@ -128,7 +129,7 @@ export default function Cart() {
     // Remove item from cart
     const removeFromCart = async (index, puzzle_id) => {
 
-        cart.splice(index,1)
+        cart.splice(index, 1)
 
         // Logged in user
         if (localStorage.getItem("user")) {
@@ -147,53 +148,63 @@ export default function Cart() {
     }
 
     return <React.Fragment>
-        <div className="container">
-            <h1>Cart</h1>
-            <div className="row">
-                {cart.map(content =>
-                    <div className="mt-2 mb-2" key={content.id}>
-                        <div className="card" role="button" >
-                            <img src={content.Puzzle.image} alt={content.Puzzle.title} width="200" />
-                            <div className="card-body">
-                                <h6 className="card-title">{content.Puzzle.title}</h6>
-                                <span>${(content.Puzzle.cost / 100).toFixed(2)}</span>
-                                <div>Quantity:
-                                    <button className="btn btn-primary btn-sm mx-1"
-                                        onClick={() => updateCartMinus(cart.indexOf(content), content.Puzzle.id)}>-</button>
-                                    <input type="text" value={content.quantity} style={{ width: "50px" }}
-                                    />
-                                    <button className="btn btn-primary btn-sm mx-1"
-                                        onClick={() => updateCartAdd(cart.indexOf(content), content.Puzzle.id)}>+</button>
-                                    <button className="btn btn-danger btn-sm mx-1"
-                                        onClick={() => removeFromCart(cart.indexOf(content), content.Puzzle.id)}>Remove</button>
-                                </div>
-                                <div>
-                                    Sub-Total: ${((content.quantity * content.Puzzle.cost) / 100).toFixed(2)}
-                                </div>
+        {cart == ""
+            ?
+            <div className="container">
+                <h1>Cart</h1>
+                <div>Your Cart is Empty!</div>
+                <div>Click <span><a href="/listings">here</a></span> to view all puzzles!</div>
+            </div>
+            :
+            <div className="container">
+                <h1>Cart</h1>
+                <div className="row">
+                    {cart.map(content =>
+                        <div className="mt-2 mb-2" key={content.id}>
+                            <div className="card" role="button" >
+                                <img className="cart-img" src={content.Puzzle.image} alt={content.Puzzle.title} width="200" />
+                                <div className="card-body">
+                                    <h6 className="card-title">{content.Puzzle.title}</h6>
+                                    <span>${(content.Puzzle.cost / 100).toFixed(2)}</span>
+                                    <div>Quantity:
+                                        <button className="btn btn-primary btn-sm mx-1"
+                                            onClick={() => updateCartMinus(cart.indexOf(content), content.Puzzle.id)}>-</button>
+                                        <input type="text" value={content.quantity} style={{ width: "50px" }}
+                                        />
+                                        <button className="btn btn-primary btn-sm mx-1"
+                                            onClick={() => updateCartAdd(cart.indexOf(content), content.Puzzle.id)}>+</button>
+                                        <button className="btn btn-danger btn-sm mx-1"
+                                            onClick={() => removeFromCart(cart.indexOf(content), content.Puzzle.id)}>Remove</button>
+                                    </div>
+                                    <div>
+                                        Sub-Total: ${((content.quantity * content.Puzzle.cost) / 100).toFixed(2)}
+                                    </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
+                <div>
+                    {/* Checkout to Stripe */}
+                    <form action={process.env.REACT_APP_URL + "/api/checkout/create-checkout-session"} method="POST">
+                        <div style={{ visibility: 'hidden' }} >
+                            <input name="userId" id="userId" value={user} />
+                        </div>
+                        {localStorage.getItem("user") ?
+                            <button type="submit" className="btn btn-success" id="checkout-btn">
+                                Checkout
+                            </button>
+                            :
+                            <button className="btn btn-danger">
+                                Login to checkout
+                            </button>
+                        }
+                    </form>
+                </div>
             </div>
-            <div>
-                {/* Checkout to Stripe */}
-                <form action={process.env.REACT_APP_URL + "/api/checkout/create-checkout-session"} method="POST">
-                    <div style={{ visibility: 'hidden' }} >
-                        <input name="userId" id="userId" value={user} />
-                    </div>
-                    {localStorage.getItem("user") ?
-                        <button type="submit" className="btn btn-success">
-                            Checkout
-                        </button>
-                        :
-                        <button className="btn btn-danger">
-                            Login to checkout
-                        </button>
-                    }
-                </form>
-            </div>
-        </div>
+        }
+
     </React.Fragment>
 
 }
