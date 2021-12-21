@@ -20,8 +20,10 @@ Welcome to the [P,U,Z,Z,L,E].Join() Store!
 A Jigsaw Puzzle E-Commerce Store for all puzzle lovers! You can find different kinds of jigsaw puzzles here, from beginner friendly ones, to 3D and irregular shaped jigsaw puzzles for anyone who is up for a good challenge!
 
 URL of Admin Site: https://ywy-puzzle-store-project.herokuapp.com/
+- Owner login: owner.12345@gemail.com, pw: rotiprata123 
+- Manager login: manager.67890@gemail.com, pw: rotiprata123
 
-URL of User website: 
+URL of User website: React: https://gracious-johnson-0b21e5.netlify.app/
 
 
 ## 1A. Users, User Goals (User Story and Acceptance Criteria)
